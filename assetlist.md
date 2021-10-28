@@ -10,7 +10,7 @@ Must-Haves:
 
     c. https://opengameart.org/content/lpc-medieval-fantasy-character-sprites
 3. Main Hub Background and color map
-4. Doors for minigame, level, and boss
+4. Doors for minigame, level, and boss: https://opengameart.org/content/portals
 5. Locked doors
 6. "star/coin" or point graphic for overall game points: https://opengameart.org/content/gold-cointoken
 7. Levels backgrounds
