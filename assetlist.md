@@ -2,6 +2,12 @@
 
 Must-Haves:
 1. Font files
+    possible options for fonts:
+    a. kenney font set: https://www.kenney.nl/assets/kenney-fonts
+    
+    b. press start: https://www.fontspace.com/press-start-font-f5841
+    
+    c. atlantis international: https://www.fontspace.com/atlantis-international-font-f31357)
 2. User skins - need for all directions and preferably animated
 
     a. https://opengameart.org/content/24x32-peppercarrot-characters
@@ -28,6 +34,7 @@ Must-Haves:
 11. Boss Background
 12. sound files
 14. Coin graphic for minigame: https://opengameart.org/content/gold-cointoken
+15. Platform graphics and non-bg environment: https://www.kenney.nl/assets/platformer-art-pixel-redux
 
 Maybes:
 1. Decorated buttons
