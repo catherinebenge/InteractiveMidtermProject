@@ -53,6 +53,7 @@ function debug(){
     image(cmap,0,0);
     p.display();
     p.move();
+    p.keyTyped();
 }
 
 //levels screens 
@@ -89,6 +90,7 @@ class Player{
     constructor(initX,initY){
         this.x = initX;
         this.y = initY;
+        this.y_acc = -12;
         this.dir;
     }
     display(){
@@ -105,6 +107,20 @@ class Player{
         }
         if(keyIsDown(87)){
             this.y -= 2;
+        }
+    }
+    keyTyped() {
+        if(keyCode == 87) {
+            let jump_fl = true;
+            if (jump_fl) {
+                console.log('o');
+                this.y += this.y_acc;
+                this.y_acc += 1;
+            } if (this.y_acc >= 12) {
+                this.y_acc = 0;
+                jump_fl = false;
+            }
+            console.log(this.y_acc);
         }
     }
 }
