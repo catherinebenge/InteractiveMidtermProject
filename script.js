@@ -45,7 +45,7 @@ function draw() {
 }
 
 function keyPressed(){
-    console.log(keyCode);
+    //console.log(keyCode);
 }
 
 //debug screen
@@ -92,21 +92,69 @@ class Player{
         this.y = initY;
         this.y_acc = -12;
         this.dir;
+        this.speed = 2;
+        //this.yspeed = 2;
+        this.color = 100;
+        this.size = 30;
     }
     display(){
+        this.findPlayerBounds();
         rectMode(CENTER);
+        noStroke();
+        fill(this.color);
         rect(this.x,this.y,30,30);
+        fill(0);
+        ellipse(this.left,this.x,10,10);
+        ellipse(this.right,this.x,10,10);
+        ellipse(this.y,this.up,10,10);
+        ellipse(this.y,this.down,10,10);
         rectMode(CORNER);
     }
+    findPlayerBounds(){
+        this.left = this.x-15;
+        this.right = this.x+15;
+        this.up = this.y-15;
+        this.down = this.y+15;
+    }
     move(){
-        if(keyIsDown(65)){
-            this.x -= 2;
+        this.color = color(0,255,0);
+        this.findPlayerBounds();
+        if(keyIsDown(65) || keyIsDown(37)){
+            let p = red(cmap.get(this.x,this.left));
+            if (p == 255) {
+                console.log(this.x,this.y)
+                this.x -= 2;
+            }
+            else{
+                this.color = color(255,0,0);
+            }
         }
-        if(keyIsDown(68)){
-            this.x += 2;
+        if(keyIsDown(68) || keyIsDown(39)){
+            let p = red(cmap.get(this.x,this.right));
+            if (p == 255) {
+                //this.x += this.speed;
+            }
+            else{
+                this.color = color(255,0,0);
+            }
         }
-        if(keyIsDown(87)){
-            this.y -= 2;
+        if(keyIsDown(87) || keyIsDown(38)){
+            let p = red(cmap.get(this.up,this.y));
+            if (p == 255) {
+                //this.y -= this.speed;
+            }
+            else{
+                this.color = color(255,0,0);
+            }
+        }
+        if(keyIsDown(83) || keyIsDown(40)){
+            let p = red(cmap.get(this.down,this.y));
+            if (p == 255) {
+                //this.y += this.speed;
+            }
+            else{
+                this.color = color(255,0,0);
+            }
         }
     }
     keyTyped() {
