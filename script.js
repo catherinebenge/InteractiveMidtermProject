@@ -1,11 +1,11 @@
-let cmap;
+let hitmap;
 let gamestate;
 let p;
 
 function preload() {
 
 //load assets
-  cmap=loadImage('images/protomap.jpg');
+  hitmap=loadImage('images/level_hitmap_t.png');
 }
 
 function setup() {
@@ -50,7 +50,7 @@ function keyPressed(){
 
 //debug screen
 function debug(){
-    image(cmap,0,0);
+    image(hitmap,0,0);
     p.display();
     p.move();
     //p.keyTyped();
@@ -87,88 +87,131 @@ function bossLevel(){
 
 //player class prototype
 class Player{
-    constructor(initX,initY){
-        this.x = initX;
-        this.y = initY;
-        this.y_acc = -12;
-        this.dir;
-        this.speed = 2;
-        //this.yspeed = 2;
-        this.color = 100;
-        this.size = 30;
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.size = 25;
+        this.ySpeed = 0;
+        this.gravity = 0.3;
+        this.findPlayerBounds();
+        this.locked = false;
     }
     display(){
-        this.findPlayerBounds();
-        rectMode(CENTER);
-        noStroke();
-        fill(this.color);
-        rect(this.x,this.y,30,30);
-        fill(0);
-        ellipse(this.left,this.y,10,10);
-        ellipse(this.right,this.y,10,10);
-        ellipse(this.x,this.up,10,10);
-        ellipse(this.x,this.down,10,10);
-        rectMode(CORNER);
+        fill(0,255,0);
+        rect(this.x, this.y, this.size, this.size);
+        // draw sensors
+        fill(0,0,255);
+        ellipse(this.left, this.middleY, 5, 5);
+        ellipse(this.right, this.middleY, 5, 5);
+        ellipse(this.middleX, this.up, 5, 5);
+        ellipse(this.middleX, this.down, 5, 5);
     }
     findPlayerBounds(){
-        this.left = this.x-15;
-        this.right = this.x+15;
-        this.up = this.y-15;
-        this.down = this.y+15;
+        this.left = this.x - 3;
+        this.right = this.x + this.size + 3;
+        this.up = this.y - 3;
+        this.down = this.y + this.size + 3;
+        this.middleX = this.x + this.size/2;
+        this.middleY = this.y + this.size/2;
     }
     move(){
-        this.color = color(0,255,0);
+        //compute our current sensor position
         this.findPlayerBounds();
+
+        // handle fall / jump movement
+        this.handleFallJumpMovement();
+        this.handleDoorMovement();
+        
         if(keyIsDown(65) || keyIsDown(37)){
-            let p = red(cmap.get(this.left,this.y));
-            if (p == 255) {
-                console.log(this.x,this.y)
-                this.x -= 2;
-            }
-            else{
-                this.color = color(255,0,0);
-            }
+            if (!this.isPixelSolid(this.left, this.middleY)) {
+                this.x -= 3;
+              }
         }
         if(keyIsDown(68) || keyIsDown(39)){
-            let p = red(cmap.get(this.right,this.y));
-            if (p == 255) {
-                this.x += this.speed;
-            }
-            else{
-                this.color = color(255,0,0);
+           // only all movement if the next pixel is not solid
+            if (!this.isPixelSolid(this.right, this.middleY)) {
+                this.x += 3;
             }
         }
-        if(keyIsDown(87) || keyIsDown(38)){
-            let p = red(cmap.get(this.up,this.x));
-            if (p == 255) {
-                this.y -= this.speed;
-            }
-            else{
-                this.color = color(255,0,0);
-            }
-        }
-        if(keyIsDown(83) || keyIsDown(40)){
-            let p = red(cmap.get(this.down,this.x));
-            if (p == 255) {
-                this.y += this.speed;
-            }
-            else{
-                this.color = color(255,0,0);
-            }
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
+          this.ySpeed = -10;
         }
     }
-//    keyTyped() {
-//        if(keyCode == 87) {
-//            let jump_fl = true;
-//            if (jump_fl) {
-//                console.log('o');
-//                this.y += this.y_acc;
-//                this.y_acc += 1;
-//            } if (this.y_acc >= 12) {
-//                this.y_acc = 0;
-//                jump_fl = false;
-//            }
-//            console.log(this.y_acc);
-//        }
-//    }
+    handleFallJumpMovement() {
+        // apply gravity to our y Speed
+        this.ySpeed += this.gravity;
+
+        // adjust our y position based on our y Speed
+        this.y += this.ySpeed;
+
+        // speed limit!
+        this.ySpeed = constrain(this.ySpeed, -10, 10);
+
+        // moving down?
+        if (this.ySpeed > 0) {
+          // check the pixel below us. if it's solid, we need to stop!
+          if (this.isPixelSolid(this.middleX, this.down)) {
+            this.ySpeed = 0;
+
+            // move us up to the pixel right above the thing we landed on that
+            // isn't solid
+            for (let i = this.down; i > 0; i--) {
+              // test this color
+              let testColor = this.isPixelSolid(this.middleX, i);
+
+              // if it's not solid we can stop here!
+              if (testColor == false) {
+                this.y = i - this.size;
+                break;
+              }
+            }
+          }
+        }
+        // moving up?
+        if (this.ySpeed < 0) {
+          // check the pixel above us. if it's solid, we need to stop!
+          if (this.isPixelSolid(this.middleX, this.up)) {
+            this.ySpeed = 0;
+
+            // move us up to the pixel right below the thing we hit that
+            // isn't solid
+            for (let i = this.up; i < height; i++) {
+              // test this color
+              let testColor = this.isPixelSolid(this.middleX, i);
+
+              // if it's not solid we can stop here!
+              if (testColor == false) {
+                this.y = i;
+                break;
+              }
+            }
+          }
+        } 
+  }
+    handleDoorMovement(){
+        //check if a door was entered
+        if(this.isDoor(this.middleX, this.up) && keyIsDown(13) && !this.locked){
+            console.log('entered a door')
+        }
+        else if(this.isDoor(this.middleX, this.up) && keyIsDown(13) && this.locked){
+            console.log('door is locked')
+        }
+        //check which door was entered - put in pixels
+    }
+    isPixelSolid(x,y){
+        let temp = red(hitmap.get(x,y));
+        if (temp == 0) {
+          //console.log(temp);
+          return true;
+        }
+          return false;
+    }
+    isDoor(x,y){
+        let temp = red(hitmap.get(x,y));
+        //console.log(temp);
+        if (temp == 113) {
+          return true;
+        }  
+          return false;  
+    }
 }
