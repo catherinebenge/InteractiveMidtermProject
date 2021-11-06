@@ -53,7 +53,7 @@ function debug(){
     image(cmap,0,0);
     p.display();
     p.move();
-    p.keyTyped();
+    //p.keyTyped();
 }
 
 //levels screens 
@@ -104,10 +104,10 @@ class Player{
         fill(this.color);
         rect(this.x,this.y,30,30);
         fill(0);
-        ellipse(this.left,this.x,10,10);
-        ellipse(this.right,this.x,10,10);
-        ellipse(this.y,this.up,10,10);
-        ellipse(this.y,this.down,10,10);
+        ellipse(this.left,this.y,10,10);
+        ellipse(this.right,this.y,10,10);
+        ellipse(this.x,this.up,10,10);
+        ellipse(this.x,this.down,10,10);
         rectMode(CORNER);
     }
     findPlayerBounds(){
@@ -120,7 +120,7 @@ class Player{
         this.color = color(0,255,0);
         this.findPlayerBounds();
         if(keyIsDown(65) || keyIsDown(37)){
-            let p = red(cmap.get(this.x,this.left));
+            let p = red(cmap.get(this.left,this.y));
             if (p == 255) {
                 console.log(this.x,this.y)
                 this.x -= 2;
@@ -130,45 +130,45 @@ class Player{
             }
         }
         if(keyIsDown(68) || keyIsDown(39)){
-            let p = red(cmap.get(this.x,this.right));
+            let p = red(cmap.get(this.right,this.y));
             if (p == 255) {
-                //this.x += this.speed;
+                this.x += this.speed;
             }
             else{
                 this.color = color(255,0,0);
             }
         }
         if(keyIsDown(87) || keyIsDown(38)){
-            let p = red(cmap.get(this.up,this.y));
+            let p = red(cmap.get(this.up,this.x));
             if (p == 255) {
-                //this.y -= this.speed;
+                this.y -= this.speed;
             }
             else{
                 this.color = color(255,0,0);
             }
         }
         if(keyIsDown(83) || keyIsDown(40)){
-            let p = red(cmap.get(this.down,this.y));
+            let p = red(cmap.get(this.down,this.x));
             if (p == 255) {
-                //this.y += this.speed;
+                this.y += this.speed;
             }
             else{
                 this.color = color(255,0,0);
             }
         }
     }
-    keyTyped() {
-        if(keyCode == 87) {
-            let jump_fl = true;
-            if (jump_fl) {
-                console.log('o');
-                this.y += this.y_acc;
-                this.y_acc += 1;
-            } if (this.y_acc >= 12) {
-                this.y_acc = 0;
-                jump_fl = false;
-            }
-            console.log(this.y_acc);
-        }
-    }
+//    keyTyped() {
+//        if(keyCode == 87) {
+//            let jump_fl = true;
+//            if (jump_fl) {
+//                console.log('o');
+//                this.y += this.y_acc;
+//                this.y_acc += 1;
+//            } if (this.y_acc >= 12) {
+//                this.y_acc = 0;
+//                jump_fl = false;
+//            }
+//            console.log(this.y_acc);
+//        }
+//    }
 }
