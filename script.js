@@ -19,6 +19,16 @@ let walkL, walkR;
 let action = 'idle';
 let animation = [];
 
+
+let playersprites;
+let spritedata;
+let testsprite;
+let walkL, walkR;
+
+let action = 'idle';
+let animation = [];
+
+
 function preload() {
 
 //bgs and hitmaps
@@ -67,7 +77,7 @@ function setup() {
 }
 
 function draw() { 
-    
+
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
       case 0:
