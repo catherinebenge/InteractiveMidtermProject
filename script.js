@@ -10,10 +10,25 @@ let tempCoin;
 let mgpoints;
 let overlapping;
 
+
+let playersprites;
+let spritedata;
+let testsprite;
+let walkL, walkR;
+
+let action = 'idle';
+let animation = [];
+
+
 function preload() {
 
 //load assets
   hitmap=loadImage('images/level_hitmap_t.png');
+
+  //player spritesheet assets and info
+  spritedata = loadJSON('spriteframes.json');
+  playersprites = loadImage('images/spritesheets/playersprites.png');
+
 }
 
 function setup() {
@@ -30,10 +45,25 @@ function setup() {
             //coins.push( tempCoin );
     //}
 
+
+    //for player sprite testing purposes
+    let frames = spritedata.frames;
+    for (let i = 0; i < frames.length; i++){
+      let pos = frames[i].position;
+      let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
+      animation.push(img);
+    }
+
+    testsprite = createImg('images/spritesheets/test.gif');
+    walkL = createImg('images/spritesheets/walkL.gif');
+    walkR = createImg('images/spritesheets/walkR.gif');
+    walkR.position(-100,0);
+    walkL.position(-100,0);
+    console.log(animation);
 }
 
 function draw() { 
-    
+
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
       case 0:
@@ -173,7 +203,8 @@ class Player{
     }
     display(){
         fill(0,255,0);
-        rect(this.x, this.y, this.size, this.size);
+        //rect(this.x, this.y, this.size, this.size);
+        testsprite.position(this.x,this.y);
         // draw sensors
         fill(0,0,255);
         if(gamestate != 4){
