@@ -20,14 +20,6 @@ let action = 'idle';
 let animation = [];
 
 
-let playersprites;
-let spritedata;
-let testsprite;
-let walkL, walkR;
-
-let action = 'idle';
-let animation = [];
-
 
 function preload() {
 
