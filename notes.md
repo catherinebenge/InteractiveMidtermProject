@@ -1,6 +1,4 @@
-## Notes for Reference
-
-Sources for Images
+## Sources for Images
 
 Mini Game & Boss BG: https://nolanfa.artstation.com/projects/A9PeA5
 
