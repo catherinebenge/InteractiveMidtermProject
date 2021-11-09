@@ -11,13 +11,6 @@ let points
 let temp;
 let noiseLocation = 0;
 
-let playersprites;
-let spritedata;
-let testsprite;
-let walkL, walkR;
-
-let action = 'idle';
-let animation = [];
 
 function preload() {
 
@@ -29,16 +22,13 @@ function preload() {
 //misc assets
     coin = loadImage('images/misc/coin.png');
     lock = loadImage('images/misc/lock.png');
-
-    spritedata = loadJSON('spriteframes.json');
-    playersprites = loadImage('images/spritesheets/playersprites.png');
 }
 
 function setup() {
     createCanvas(800,600);
     
 //set gamestate
-    gamestate=1;
+    gamestate=4;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -49,21 +39,6 @@ function setup() {
             coins[i].setPos();
     }
     noiseDetail(24);
-
-    //for player sprite testing purposes
-    let frames = spritedata.frames;
-    for (let i = 0; i < frames.length; i++){
-      let pos = frames[i].position;
-      let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
-      animation.push(img);
-    }
-
-    testsprite = createImg('images/spritesheets/test.gif');
-    walkL = createImg('images/spritesheets/walkL.gif');
-    walkR = createImg('images/spritesheets/walkR.gif');
-    walkR.position(-100,0);
-    walkL.position(-100,0);
-    console.log(animation);
 }
 
 function draw() { 
@@ -221,8 +196,7 @@ class Player{
     }
     display(){
         fill(0,255,0);
-        //rect(this.x, this.y, this.size, this.size);
-        testsprite.position(this.x,this.y);
+        rect(this.x, this.y, this.size, this.size);
         // draw sensors
         fill(0,0,255);
         ellipse(this.left, this.middleY, 5, 5);
