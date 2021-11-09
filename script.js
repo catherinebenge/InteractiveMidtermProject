@@ -1,6 +1,14 @@
 let hitmap;
 let gamestate;
 let p;
+let time;
+let begin;
+let playing = false;
+let firstgame = true;
+let coins = [];
+let tempCoin;
+let mgpoints;
+let overlapping;
 
 function preload() {
 
@@ -12,8 +20,16 @@ function setup() {
     createCanvas(800,600);
     
 //set gamestate
-    gamestate=-100;
+    gamestate=4;
     p = new Player(200,200);
+    
+    setInterval(timer, 1000);
+    //for(let i = 0; i < 20; i++){
+            //tempCoin = new mgCoin();
+           // tempCoin.setPos();
+            //coins.push( tempCoin );
+    //}
+
 }
 
 function draw() { 
@@ -53,7 +69,6 @@ function debug(){
     image(hitmap,0,0);
     p.display();
     p.move();
-    //p.keyTyped();
 }
 
 //levels screens 
@@ -76,9 +91,69 @@ function levelTwo(){
 }
 
 function miniGame(){
+    // timer that controls game inspired by sample code: https://editor.p5js.org/denaplesk2/sketches/ryIBFP_lG
+    //click to begin
+    if(mouseIsPressed && !playing){
+        playing = true;
+        mgpoints=0;
+        setTimer();
+    }
+    background(100);
+    fill(0);
     
+    //game is being played
+    if(playing){
+        text(mgpoints+' points', 20, 25);
+        if (time >= 10) {
+        text("0:" + time, width / 2, height / 2);
+      }
+        if (time < 10 && time > 0) {
+        text('0:0' + time, width / 2, height / 2);
+      }
+        if (time == 0) {
+        playing = false;
+        firstgame = false;
+        }
+        p.display();
+        p.moveInMinigame();
+        //if(!overlapping){
+            
+        //}
+        while(coins.length < 20){
+            tempCoin = new mgCoin();
+            tempCoin.setPos();
+            coins.push( tempCoin );
+        }
+        for(let i = 0; i < coins.length; i++){
+            coins[i].display();
+        }
+        for(let i = 0; i < coins.length; i++){
+        if(coins[i].col()){
+            mgpoints +=1;
+            coins.splice(i, 1);
+        }
+        }
+        console.log(coins.length);
+    }
+    //game is over
+    else if(firstgame){
+        text("Press Mouse to Start Game", width / 2, height / 2 + 15);
+    }
+    else{
+        text('Game Over. Click Again to Play', width / 2, height / 2 + 15);
+    }
     
 }
+
+function timer() {
+  if (time > 0) {
+    time--;
+  }
+}
+function setTimer(){
+   time = 30; 
+}
+
 
 function bossLevel(){
     
@@ -101,10 +176,12 @@ class Player{
         rect(this.x, this.y, this.size, this.size);
         // draw sensors
         fill(0,0,255);
+        if(gamestate != 4){
         ellipse(this.left, this.middleY, 5, 5);
         ellipse(this.right, this.middleY, 5, 5);
         ellipse(this.middleX, this.up, 5, 5);
         ellipse(this.middleX, this.down, 5, 5);
+        }
     }
     findPlayerBounds(){
         this.left = this.x - 3;
@@ -135,6 +212,20 @@ class Player{
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
+        }
+    }
+    moveInMinigame(){
+        if(keyIsDown(65) || keyIsDown(37)){
+            this.x -= 4;
+        }
+        if(keyIsDown(68) || keyIsDown(39)){
+           this.x += 4;
+        }
+        if(keyIsDown(87) || keyIsDown(38)){
+           this.y -= 4;
+        }
+        if(keyIsDown(83) || keyIsDown(40)){
+           this.y += 4;
         }
     }
     handleFallJumpMovement() {
@@ -214,4 +305,42 @@ class Player{
         }  
           return false;  
     }
+}
+
+class mgCoin{
+    constructor(){
+        this.x;
+        this.y;
+    }
+    setPos(){
+//        overlapping = false;
+//        for(let i = 0; i < coins.length; i++){
+//            let other = coins[i];
+//            let d = (this.x, this.y, other.x, other.y);
+//            if(d < 100){
+//                overlapping = true;
+//                break;
+//            }
+//        }
+//        if(!overlapping){
+                this.x = floor(random(30,width-30));
+                this.y = floor(random(30,height-30)); 
+       // }
+
+    }
+    display(){
+        fill(255,0,0);
+        circle(this.x,this.y,30,30);
+    }
+    col(){
+        for(let i=0; i < coins.length; i++){
+        if(dist(this.x+30, this.y+30, this.x+15 + this.y+15)){
+            console.log(i+" is too close")
+        }
+        if (dist(this.x+15, this.y+15, p.x+15, p.y+15) < 30) {
+             return true;
+         }
+            return false;
+    }
+}
 }
