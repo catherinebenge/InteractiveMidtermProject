@@ -7,6 +7,19 @@ let playing = false;
 let firstgame = true;
 let coins = [];
 let mgpoints;
+let overlapping;
+let bg_x = 0;
+let bushes;
+let bushes_x = 0;
+let trees;
+let trees_x = 0;
+let front_leaves;
+let front_leaves_x = 0;
+let scrolling = false;
+let test_hitmap;
+let level1_hitmap;
+
+
 let points;
 let temp;
 let noiseLocation = 0;
@@ -40,6 +53,13 @@ function preload() {
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
 
     at01 = loadFont('at01.ttf');
+    //load assets
+  test_hitmap=loadImage('images/level_hitmap_t.png');
+  level1_hitmap = loadImage('images/level1hitmap.png');
+  level1bg = loadImage('images/spritesheets/parallax_forest2/j1.png');
+  bushes = loadImage('images/spritesheets/parallax_forest1/bushes.png');
+  trees = loadImage('images/spritesheets/parallax_forest1/trees.png');
+  front_leaves = loadImage('images/spritesheets/parallax_forest1/frontleaves.png');
 }
 
 function setup() {
@@ -48,6 +68,7 @@ function setup() {
     textFont(at01);
     textSize(20);
 //set gamestate
+    
     gamestate=0;
     points = 0;
     p = new Player(60,402);
@@ -130,6 +151,8 @@ function mousePressed(){
 
 //debug screen
 function debug(){
+    hitmap = test_hitmap;
+    image(hitmap,0,0);
     p.display();
     p.move();
 }
@@ -185,7 +208,31 @@ function hubScreen(){
 }
 
 function levelOne(){
-    
+    // moving hitmap for first lvl
+    level1_hitmap.resize(4268, 600);
+    hitmap = level1_hitmap;
+    image(hitmap, bg_x, 0);
+    background(100);
+    // trees
+    for (let i=0; i < 4; i++) {
+        tree_random = [50, 100, 0, -50];
+        image(trees, trees_x + (i * 512 - tree_random[i]), 200);
+    }
+    // leaves
+    for (let i=0; i < 4; i++) {
+        noStroke();
+        fill(9, 10, 19);
+        rect(0, 0, 800, 200);
+        image(front_leaves, front_leaves_x + (i * 500) - 20, 200);
+    }
+    // bushes
+    for (let i=0; i < 7; i++) {
+        image(bushes, bushes_x + (i * 512), 200);
+    }
+    level1bg.resize(4268, 600);
+    image(level1bg, bg_x, 0);
+    p.display();
+    p.moveinlevel();
     
 }
 
@@ -274,7 +321,9 @@ class Player{
         this.ySpeed = 0;
         this.gravity = 0.3;
         this.findPlayerBounds();
+        this.findPlayerBounds_level();
         this.locked = false;
+        this.fake_x = x;
     }
     display(){
         fill(0,255,0);
@@ -294,6 +343,23 @@ class Player{
         this.down = this.y + this.size + 3;
         this.middleX = this.x + this.size/2;
         this.middleY = this.y + this.size/2;
+    }
+    findPlayerBounds_level(){
+        this.fake_x = this.x + (bg_x * -1);
+        this.left = this.fake_x - 3;
+        this.right = this.fake_x + this.size + 3;
+        this.up = this.y - 3;
+        this.down = this.y + this.size + 3;
+        this.middleX = this.fake_x + this.size/2;
+        this.middleY = this.y + this.size/2;
+    }
+    death_detection(x, y) {
+        let temp = blue(hitmap.get(x,y));
+            if (temp == 0) {
+            //console.log(temp);
+            return true;
+            }
+            return false;
     }
     move(){
         //compute our current sensor position
@@ -316,10 +382,72 @@ class Player{
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
-          if(gamestate == 4){
-              this.ySpeed = -40;
-          }
         }
+    }
+    moveinlevel() {
+
+        this.findPlayerBounds_level();
+        this.handleFallJumpMovement();
+        this.handleDoorMovement();
+        
+        // movement right before reaching half the screen
+        if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
+            if (!this.isPixelSolid(this.right, this.middleY)) {
+                this.x += 3;
+            }
+        } // background movement to make the player look like theyre going left
+        if ((gamestate == 2 || gamestate == 3) && this.x <= 400 && bg_x < 0 && (keyIsDown(65) || keyIsDown(37))) {
+            if (!this.isPixelSolid(this.left, this.middleY)) {
+                this.x = 400;
+                scrolling = true;
+                bg_x += 3;
+                bushes_x += 2;
+                front_leaves_x += 1;
+                trees_x += 1;
+            }
+        } // movement left after finishing the background scroll
+        if ((gamestate == 2 || gamestate == 3) && bg_x >= -3468 && (keyIsDown(65) || keyIsDown(37)) && scrolling == false) {
+            if (!this.isPixelSolid(this.left, this.middleY)) {
+                this.x -= 3;
+            }
+        } // background movement to make the player look like theyre going right
+        if ((gamestate == 2 || gamestate == 3) && this.x >= 400 && bg_x > -3467 && (keyIsDown(68) || keyIsDown(39))) {
+            if (!this.isPixelSolid(this.right, this.middleY)) {
+                this.x = 400;
+                scrolling = true;
+                bg_x -= 3;
+                bushes_x -= 2;
+                trees_x -= 1;
+                front_leaves_x -= 1;
+            }
+        } // stop background scroll in the beginning and make the player move left
+        if ((gamestate == 2 || gamestate == 3) && bg_x >= 0 && (keyIsDown(65) || keyIsDown(37)) && scrolling == true) {
+            if (!this.isPixelSolid(this.left, this.middleY)) {
+                bg_x = 0;
+                this.x -= 3;
+                bushes_x = 0;
+                front_leaves_x = 0;
+                trees_x = 0;
+                scrolling = false;
+            }
+        } // stop background scroll at the end and make the player move right
+        if ((gamestate == 2 || gamestate == 3) && bg_x <= -3468 && (keyIsDown(68) || keyIsDown(39)) && scrolling == true) {
+            if (!this.isPixelSolid(this.right, this.middleY)) {
+                bg_x = -3468;
+                bushes_x = -2312;
+                trees_x = -1156;
+                front_leaves_x = -1156;
+                this.x += 3;
+                scrolling = false;
+            }
+        }
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
+          this.ySpeed = -10;
+        }
+        if (this.death_detection(this.fake_x, this.middleY)) {
+            gamestate = 1;
+        }
+
     }
     handleFallJumpMovement() {
         // apply gravity to our y Speed
@@ -435,11 +563,12 @@ class Player{
         }
     }
     isPixelSolid(x,y){
-        let temp = red(hitmap.get(x,y));
-        if (temp == 0) {
-          return true;
-        }
-          return false;
+            let temp = red(hitmap.get(x,y));
+            if (temp == 255) {
+            //console.log(temp);
+            return false;
+            }
+            return true;
     }
     isDoor(x,y){
         let temp = red(hitmap.get(x,y));
