@@ -77,6 +77,9 @@ function setup() {
     textFont(at01);
     textSize(20);
     //set gamestate
+
+    // enemies
+    enemy1 = new Enemy(200,402);
     
     gamestate=2;
     points = 0;
@@ -253,6 +256,7 @@ function levelOne(){
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
+    playing = true;
 }
 
 function levelTwo(){
@@ -702,16 +706,16 @@ class Sprite {
     }
 }
 
-//class Enemy{
-//    constructor(x,y){
-//        this.x = x;
-//        this.y = y;
-//        this.speed = 1;
-//    }
-//
-//    display(){
-//        if(gamestate == 2){
-//            rect(this.x,this.y,50,80);
-//        }
-//    }
-//}
+class Enemy{
+   constructor(x,y){
+       this.x = x;
+       this.y = y;
+       this.speed = 1;
+   }
+
+   display(){
+       if (gamestate == 2 || gamestate == 3) {
+           rect(this.x,this.y,50,80);
+       }
+   }
+}
