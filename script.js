@@ -642,7 +642,7 @@ class Sprite {
         this.x = x;
         this.y = y;
         //0 is red, 1 is onion, 2 is fairy
-        frameRate(4);
+        //frameRate(4);
         let index = floor(this.index) % this.len;
         image(this.animation[index],this.x,this.y);
         
