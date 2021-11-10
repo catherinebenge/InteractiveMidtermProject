@@ -70,6 +70,7 @@ function setup() {
     // resizing everything
     level1_hitmap.resize(4268, 600);
     level1bg.resize(4268, 600);
+    frameRate(60);
 
     textFont(at01);
     textSize(20);
@@ -249,7 +250,6 @@ function levelOne(){
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
-    
 }
 
 function levelTwo(){
