@@ -77,7 +77,7 @@ function setup() {
     textSize(20);
     //set gamestate
     
-    gamestate=2;
+    gamestate=1;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -88,7 +88,6 @@ function setup() {
             coins[i].setPos();
     }
     noiseDetail(24);
-
     //different player characters
     let redFrames= spritedata.redFrames;
     for (let i = 0; i < redFrames.length; i++){
@@ -118,7 +117,6 @@ function setup() {
         aniAtk.push(img);
     }
     character = new Sprite(chara,1);
-
 //    for(let i = 0; i < 4; i++){
 //        //enemies[i] = new Enemy(-100,0);
 //    }
