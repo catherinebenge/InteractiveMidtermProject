@@ -69,7 +69,7 @@ function setup() {
     textSize(20);
 //set gamestate
     
-    gamestate=0;
+    gamestate=1;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
