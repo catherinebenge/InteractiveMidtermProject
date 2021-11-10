@@ -69,7 +69,7 @@ function setup() {
     textSize(20);
     //set gamestate
     
-    gamestate=2;
+    gamestate=1;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -327,8 +327,8 @@ class Player{
     }
     display(){
         fill(0,255,0);
-        rect(this.x, this.y, this.size, this.size);
-        // character.display(this.x,this.y);
+        // rect(this.x, this.y, this.size, this.size);
+        character.display(this.x,this.y);
         // draw sensors
         fill(0,0,255);
         ellipse(this.left, this.middleY, 5, 5);
