@@ -69,6 +69,10 @@ function setup() {
     level1_hitmap.resize(4268, 600);
     level1bg.resize(4268, 600);
     
+    // resizing everything
+    level1_hitmap.resize(4268, 600);
+    level1bg.resize(4268, 600);
+
     textFont(at01);
     textSize(20);
     //set gamestate
