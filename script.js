@@ -66,12 +66,14 @@ function preload() {
 
 function setup() {
     createCanvas(800,600);
+    level1_hitmap.resize(4268, 600);
+    level1bg.resize(4268, 600);
     
     textFont(at01);
     textSize(20);
     //set gamestate
     
-    gamestate=1;
+    gamestate=2;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -113,9 +115,9 @@ function setup() {
     }
     character = new Sprite(chara,1);
 
-    for(let i = 0; i < 4; i++){
-        enemies[i] = new Enemy(-100,0);
-    }
+//    for(let i = 0; i < 4; i++){
+//        //enemies[i] = new Enemy(-100,0);
+//    }
     
 }
 
@@ -223,11 +225,11 @@ function hubScreen(){
 
 function levelOne(){
     // moving hitmap for first lvl
-    level1_hitmap.resize(4268, 600);
+    //frameRate(60);
     hitmap = level1_hitmap;
     image(hitmap, bg_x, 0);
     background(100);
-    // trees
+     //trees
     for (let i=0; i < 4; i++) {
         tree_random = [50, 100, 0, -50];
         image(trees, trees_x + (i * 512 - tree_random[i]), 200);
@@ -243,7 +245,6 @@ function levelOne(){
     for (let i=0; i < 7; i++) {
         image(bushes, bushes_x + (i * 512), 200);
     }
-    level1bg.resize(4268, 600);
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
@@ -697,16 +698,16 @@ class Sprite {
     }
 }
 
-class Enemy{
-    constructor(x,y){
-        this.x = x;
-        this.y = y;
-        this.speed = random(1,3);
-    }
-
-    display(){
-        if(gamestate == 2){
-            rect(this.x,this.y,50,80);
-        }
-    }
-}
+//class Enemy{
+//    constructor(x,y){
+//        this.x = x;
+//        this.y = y;
+//        this.speed = 1;
+//    }
+//
+//    display(){
+//        if(gamestate == 2){
+//            rect(this.x,this.y,50,80);
+//        }
+//    }
+//}
