@@ -14,13 +14,14 @@ let at01;
 
 let playersprites;
 let spritedata;
-let testsprite;
-let walkL, walkR;
+let character;
 
-let chara = 'red';
-
-let action = 'idle';
-let animation = [];
+let chara = 0;
+let action = "idle";
+let aniR = [];
+let aniO = [];
+let aniF = [];
+let aniAtk = [];
 
 
 
@@ -59,20 +60,37 @@ function setup() {
     }
     noiseDetail(24);
 
-    //for player sprite testing purposes
-    let redFrames= spritedata.frames;
+    //different player characters
+    let redFrames= spritedata.redFrames;
     for (let i = 0; i < redFrames.length; i++){
       let pos = redFrames[i].position;
       let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
-      animation.push(img);
+      aniR.push(img);
     }
 
-    testsprite = createImg('images/spritesheets/test.gif');
-    walkL = createImg('images/spritesheets/walkL.gif');
-    walkR = createImg('images/spritesheets/walkR.gif');
-    walkR.position(-100,0);
-    walkL.position(-100,0);
-    console.log(animation);
+    let onionFrames= spritedata.onionFrames;
+    for (let i = 0; i < onionFrames.length; i++){
+      let pos = onionFrames[i].position;
+      let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
+      aniO.push(img);
+    }
+
+    let fairyFrames = spritedata.fairyFrames;
+    for (let i = 0; i < fairyFrames.length; i++){
+        let pos = fairyFrames[i].position;
+        let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
+        aniF.push(img);
+    }
+
+    let fireFrames = spritedata.fireFrames;
+    for (let i = 0; i < fireFrames.length; i++){
+        let pos = fireFrames[i].position;
+        let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
+        aniAtk.push(img);
+    }
+
+    character = new Sprite(aniR,350,445,1);
+
 }
 
 function draw() { 
@@ -130,9 +148,25 @@ function startScreen(){
     textSize(30);
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
-    //image()
+    character.display();
+    character.animate();
+
     textAlign(LEFT);
 
+    //character selection using arrow keys
+    // 0 = Red, 1 = Onion, 2 = Fairy
+    if(keyIsDown(37)) {
+        chara -= 1;
+        if(chara < 0){
+            chara = 0;
+        }
+    }
+    else if(keyIsDown(39)){
+        chara += 1;
+        if(chara > 2){
+            chara = 2;
+        }
+    }
 }
 
 function hubScreen(){
@@ -452,30 +486,55 @@ class mgCoin{
 }
 }
 
+//based on Coding Train's code: https://editor.p5js.org/codingtrain/sketches/vhnFx1mml
 class Sprite {
-    constructor(animation,x,y,speed){
+    constructor(ani,x,y,speed){
         this.x = x;
         this.y = y;
-        this.action = action;
-        this.animation = animation;
-        //this.w = this.animation[0].width;
-        //this.len = this.animation.length;
+        this.animation = ani;
         this.speed = speed;
         this.index = 0;
+
+        /*
+        if (this.ani == 0){
+            this.animation = aniR;
+        }
+        else if (this.ani == 1){
+            this.animation = aniO;
+        }
+        else if (this.ani == 2){
+            this.animation = aniF;
+        }
+        */
+        this.len = this.animation.length;
     }
 
     display(){
+        //0 is red, 1 is onion, 2 is fairy
+        frameRate(4);
         let index = floor(this.index) % this.len;
         image(this.animation[index],this.x,this.y);
-
+        
         /*
-        if (this.action == 'idle'){
-            image(animation[0],this.x,this.y);
+        if(this.animation == 0){
+            image(this.animation[index],this.x,this.y);
+        }
+        else if(this.animation == 1){
+            image(this.animation[index],this.x,this.y);
+        }
+        else if(this.animation == 2){
+            image(this.animation[index],this.x,this.y);
         }
         */
+
     }
 
     animate(){
-        this.index = this.index + this.speed;
+        if(gamestate == 0){
+            this.index = this.index + this.speed;
+            if(this.index > 6 || this.index < 3){
+                this.index = 3;
+            } 
+        }
     }
 }
