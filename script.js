@@ -7,14 +7,17 @@ let playing = false;
 let firstgame = true;
 let coins = [];
 let mgpoints;
-let points
+let points;
 let temp;
 let noiseLocation = 0;
+let at01;
 
 let playersprites;
 let spritedata;
 let testsprite;
 let walkL, walkR;
+
+let chara = 'red';
 
 let action = 'idle';
 let animation = [];
@@ -33,12 +36,15 @@ function preload() {
     lock = loadImage('images/misc/lock.png');
 
     spritedata = loadJSON('spriteframes.json');
-    playersprites = loadImage('images/spritesheets/playersprites.png');
+    playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
+
+    at01 = loadFont('at01.ttf');
 }
 
 function setup() {
     createCanvas(800,600);
     
+    textFont(at01);
 //set gamestate
     gamestate=1;
     points = 0;
@@ -429,4 +435,32 @@ class mgCoin{
             this.setPos();
         }
 }
+}
+
+class Sprite {
+    constructor(animation,x,y,speed){
+        this.x = x;
+        this.y = y;
+        this.action = action;
+        this.animation = animation;
+        //this.w = this.animation[0].width;
+        //this.len = this.animation.length;
+        this.speed = speed;
+        this.index = 0;
+    }
+
+    display(){
+        let index = floor(this.index) % this.len;
+        image(this.animation[index],this.x,this.y);
+
+        /*
+        if (this.action == 'idle'){
+            image(animation[0],this.x,this.y);
+        }
+        */
+    }
+
+    animate(){
+        this.index = this.index + this.speed;
+    }
 }
