@@ -53,12 +53,12 @@ function preload() {
 
     at01 = loadFont('at01.ttf');
     //load assets
-  test_hitmap=loadImage('images/level_hitmap_t.png');
+  test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
   level1_hitmap = loadImage('images/level1hitmap.png');
-  level1bg = loadImage('images/spritesheets/parallax_forest2/j1.png');
-  bushes = loadImage('images/spritesheets/parallax_forest1/bushes.png');
-  trees = loadImage('images/spritesheets/parallax_forest1/trees.png');
-  front_leaves = loadImage('images/spritesheets/parallax_forest1/frontleaves.png');
+  level1bg = loadImage('images/parallax_forest2/j1.png');
+  bushes = loadImage('images/parallax_forest1/bushes.png');
+  trees = loadImage('images/parallax_forest1/trees.png');
+  front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
 }
 
 function setup() {
@@ -68,7 +68,7 @@ function setup() {
     textSize(20);
 //set gamestate
     
-    gamestate=0;
+    gamestate=2;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -79,14 +79,14 @@ function setup() {
             coins[i].setPos();
     }
     noiseDetail(24);
-
+    // redFrame gives error message
     //for player sprite testing purposes
-    let redFrames= spritedata.frames;
-    for (let i = 0; i < redFrames.length; i++){
-      let pos = redFrames[i].position;
-      let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
-      animation.push(img);
-    }
+    // let redFrames= spritedata.frames;
+    // for (let i = 0; i < redFrames.length; i++){
+    //   let pos = redFrames[i].position;
+    //   let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
+    //   animation.push(img);
+    // }
 
     testsprite = createImg('images/spritesheets/test.gif');
     walkL = createImg('images/spritesheets/walkL.gif');
@@ -410,9 +410,9 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
         }
-        if (this.death_detection(this.fake_x, this.middleY)) {
-            gamestate = 1;
-        }
+        // if (this.death_detection(this.fake_x, this.middleY)) {
+        //     gamestate = ;
+        // }
 
     }
     handleFallJumpMovement() {
@@ -530,11 +530,11 @@ class Player{
     }
     isPixelSolid(x,y){
             let temp = red(hitmap.get(x,y));
-            if (temp == 255) {
+            if (temp == 0) {
             //console.log(temp);
-            return false;
-            }
             return true;
+            }
+            return false;
     }
     isDoor(x,y){
         let temp = red(hitmap.get(x,y));
