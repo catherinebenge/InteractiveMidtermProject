@@ -67,6 +67,10 @@ function preload() {
 function setup() {
     createCanvas(800,600);
     
+    // resizing everything
+    level1_hitmap.resize(4268, 600);
+    level1bg.resize(4268, 600);
+
     textFont(at01);
     textSize(20);
     //set gamestate
@@ -223,7 +227,6 @@ function hubScreen(){
 
 function levelOne(){
     // moving hitmap for first lvl
-    level1_hitmap.resize(4268, 600);
     hitmap = level1_hitmap;
     image(hitmap, bg_x, 0);
     background(100);
@@ -243,7 +246,6 @@ function levelOne(){
     for (let i=0; i < 7; i++) {
         image(bushes, bushes_x + (i * 512), 200);
     }
-    level1bg.resize(4268, 600);
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
