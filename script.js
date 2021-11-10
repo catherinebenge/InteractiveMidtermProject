@@ -45,8 +45,9 @@ function setup() {
     createCanvas(800,600);
     
     textFont(at01);
+    textSize(20);
 //set gamestate
-    gamestate=1;
+    gamestate=0;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -59,9 +60,9 @@ function setup() {
     noiseDetail(24);
 
     //for player sprite testing purposes
-    let frames = spritedata.frames;
-    for (let i = 0; i < frames.length; i++){
-      let pos = frames[i].position;
+    let redFrames= spritedata.frames;
+    for (let i = 0; i < redFrames.length; i++){
+      let pos = redFrames[i].position;
       let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
       animation.push(img);
     }
@@ -117,6 +118,20 @@ function debug(){
 
 //levels screens 
 function startScreen(){
+    //add side-scrolling parallax bg later for the characters to "walk" on
+    background(128);
+    fill('#00ff00');
+    rect(0,500,800,100);
+    fill(0);
+
+    textAlign(CENTER);
+    textSize(100);
+    text('[Placeholder Title]',width/2,150);
+    textSize(30);
+    text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
+
+    //image()
+    textAlign(LEFT);
 
 }
 
