@@ -28,6 +28,7 @@ let at01;
 let playersprites;
 let spritedata;
 let character;
+let enemydata;
 let enemies = [];
 
 let chara = 0;
@@ -52,7 +53,7 @@ function preload() {
 
     spritedata = loadJSON('spriteframes.json');
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
-
+    enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
     //load assets
   test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
@@ -113,7 +114,7 @@ function setup() {
     character = new Sprite(chara,1);
 
     for(let i = 0; i < 4; i++){
-        //enemies[i] = new Enemy(20,20);
+        enemies[i] = new Enemy(-100,0);
     }
     
 }
@@ -702,11 +703,10 @@ class Enemy{
         this.y = y;
         this.speed = random(1,3);
     }
-/*
+
     display(){
         if(gamestate == 2){
             rect(this.x,this.y,50,80);
         }
     }
-*/
 }
