@@ -67,9 +67,9 @@ function setup() {
     
     textFont(at01);
     textSize(20);
-//set gamestate
+    //set gamestate
     
-    gamestate=1;
+    gamestate=2;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -110,7 +110,7 @@ function setup() {
         aniAtk.push(img);
     }
 
-    character = new Sprite(aniR,350,445,1);
+    character = new Sprite(aniR,1);
 
 }
 
@@ -171,7 +171,7 @@ function startScreen(){
     textSize(30);
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
-    character.display();
+    character.display(350,445);
     character.animate();
 
     textAlign(LEFT);
@@ -327,8 +327,8 @@ class Player{
     }
     display(){
         fill(0,255,0);
-        //rect(this.x, this.y, this.size, this.size);
-        testsprite.position(this.x,this.y);
+        rect(this.x, this.y, this.size, this.size);
+        // character.display(this.x,this.y);
         // draw sensors
         fill(0,0,255);
         ellipse(this.left, this.middleY, 5, 5);
@@ -617,9 +617,9 @@ class mgCoin{
 
 //based on Coding Train's code: https://editor.p5js.org/codingtrain/sketches/vhnFx1mml
 class Sprite {
-    constructor(ani,x,y,speed){
-        this.x = x;
-        this.y = y;
+    constructor(ani,speed){
+        //this.x = x;
+        //this.y = y;
         this.animation = ani;
         this.speed = speed;
         this.index = 0;
@@ -638,7 +638,9 @@ class Sprite {
         this.len = this.animation.length;
     }
 
-    display(){
+    display(x,y){
+        this.x = x;
+        this.y = y;
         //0 is red, 1 is onion, 2 is fairy
         frameRate(4);
         let index = floor(this.index) % this.len;
