@@ -28,6 +28,7 @@ let at01;
 let playersprites;
 let spritedata;
 let character;
+let enemies = [];
 
 let chara = 0;
 let action = "idle";
@@ -109,9 +110,12 @@ function setup() {
         let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
         aniAtk.push(img);
     }
+    character = new Sprite(chara,1);
 
-    character = new Sprite(aniR,1);
-
+    for(let i = 0; i < 4; i++){
+        //enemies[i] = new Enemy(20,20);
+    }
+    
 }
 
 function draw() { 
@@ -144,6 +148,28 @@ function draw() {
 
 function keyPressed(){
     //console.log(keyCode);
+    /*
+    //character selection using arrow keys
+        // 0 = Red, 1 = Onion, 2 = Fairy
+            if(keyCode == LEFT_ARROW) {
+                chara -= 1;
+            }
+            else if(keyCode == RIGHT_ARROW){
+                chara += 1;
+            }
+
+            if(chara < 0){
+                chara = 0;
+            }
+            if(chara > 2){
+                chara = 2;
+            }
+            
+            if(keyCode == ENTER){
+                gamestate = 1;
+            }
+
+    */
 }
 function mousePressed(){
     //console.log(mouseX,mouseY);
@@ -171,25 +197,12 @@ function startScreen(){
     textSize(30);
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
+    
     character.display(350,445);
     character.animate();
-
     textAlign(LEFT);
 
-    //character selection using arrow keys
-    // 0 = Red, 1 = Onion, 2 = Fairy
-    if(keyIsDown(37)) {
-        chara -= 1;
-        if(chara < 0){
-            chara = 0;
-        }
-    }
-    else if(keyIsDown(39)){
-        chara += 1;
-        if(chara > 2){
-            chara = 2;
-        }
-    }
+    
 }
 
 function hubScreen(){
@@ -618,13 +631,11 @@ class mgCoin{
 //based on Coding Train's code: https://editor.p5js.org/codingtrain/sketches/vhnFx1mml
 class Sprite {
     constructor(ani,speed){
-        //this.x = x;
-        //this.y = y;
-        this.animation = ani;
+        this.ani = ani;
         this.speed = speed;
         this.index = 0;
 
-        /*
+        
         if (this.ani == 0){
             this.animation = aniR;
         }
@@ -634,7 +645,7 @@ class Sprite {
         else if (this.ani == 2){
             this.animation = aniF;
         }
-        */
+    
         this.len = this.animation.length;
     }
 
@@ -645,27 +656,57 @@ class Sprite {
         //frameRate(4);
         let index = floor(this.index) % this.len;
         image(this.animation[index],this.x,this.y);
-        
-        /*
-        if(this.animation == 0){
-            image(this.animation[index],this.x,this.y);
-        }
-        else if(this.animation == 1){
-            image(this.animation[index],this.x,this.y);
-        }
-        else if(this.animation == 2){
-            image(this.animation[index],this.x,this.y);
-        }
-        */
 
     }
 
     animate(){
-        if(gamestate == 0){
+        if(frameCount%15==0){
             this.index = this.index + this.speed;
-            if(this.index > 6 || this.index < 3){
-                this.index = 3;
-            } 
+            if(gamestate == 0){
+                if(this.animation == aniR){
+                    if(this.index > 6 || this.index < 3){
+                        this.index = 3;
+                    } 
+                }
+                else if(this.animation == aniO){
+                    if(this.index < 3 || this.index > 4){
+                        this.index = 3;
+                    }
+                }
+                else if(this.animation == aniF){
+                    if(this.index < 10 || this.index > 13){
+                        this.index = 10;
+                    }
+                }
+            }
+
+            else{
+                if(action=="idle"){
+                    if(this.animation == aniR){
+                        if(this.index != 0){
+                            this.index = 0;
+                        }
+                    }
+                    
+                }
+            }
+            
+            
+        }   
+    }
+}
+
+class Enemy{
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.speed = random(1,3);
+    }
+/*
+    display(){
+        if(gamestate == 2){
+            rect(this.x,this.y,50,80);
         }
     }
+*/
 }
