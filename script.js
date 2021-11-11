@@ -47,6 +47,8 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
+let startbgm, hubbgm, level1bgm, level2bgm;
+
 
 
 function preload() {
@@ -64,6 +66,9 @@ function preload() {
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
+
+    //sound
+    //startbgm = loadSound('sounds/')
 
 //level one
     //load assets
