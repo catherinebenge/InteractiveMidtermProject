@@ -12,11 +12,15 @@
             referrerpolicy="no-referrer">
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200;400&display=swap');
     </style> 
     <style>
         body{
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 300;
+            background: url('images/bgs/bghubwdoors.png');
+            background-size: cover;
+            color:#0f2100;
         }
         #header{
             font-family: 
@@ -24,17 +28,22 @@
         canvas{
             margin-top: 50px;
             margin-left: 50px;
+/*            border: 2px solid black;*/
+            border: 2px solid #0f6f05;
         }
         #header{
         }
         #container{
             position:absolute;
-            height:600px;
+            height:560px;
             overflow-y: scroll;
             right:5%;
-            left: 900px;
+            left:900px;
             top:50px;
             width:30vw;
+            padding:20px;
+            background-color: rgba(255,220,155,.88);
+            border: 2px solid #0f6f05;
         }
     </style>
   </head>
@@ -58,17 +67,18 @@
               <li>Ali Salifov</li>
           </ul>
           <h3>How do I play?</h3>
-          <p>You should be able to interact with the game any time while on this webpage. Test this by clicking an arror key, left or right. This should trigger the sprite selection, and you can choose between two onions to play for the duration of your session.</p>
-          <p>Next, you will find yourself in our game hub. You can access the selection screen and all levels from this point. To see which door leads to what game section, hover your mouse over the door. For a summary of all game interactions and key commands, read below.</p>
+          <p>You should be able to interact with the game any time while on this webpage. Test this by clicking the <b>left/right arrow keys</b>. This should trigger the sprite selection, and you can choose between two onions to play for the duration of your session.</p>
+          <p>Next, you will find yourself in our game hub. You can access the selection screen and all levels from this point. To see which door leads to what game section, <b>hover your mouse</b> over the door. For a summary of all game interactions and key commands, read below.</p>
           <h3>How to play the game</h3>
-          <p>Navigate around the hub and play all the levels. Note that level 2 is locked until you complete level 1. You can play the minigame at any time. To enter a level, go to a door and press either the "w" key or the "up" arrow.</p>
+          <p>Navigate around the hub and play all the levels. Note that level 2 is locked until you complete level 1. You can play the minigame at any time. To enter a level, go to a door and press either the <b>"w"</b> key or the <b>"up"</b> arrow.</p>
           <h3>How to move and jump</h3>
-          <p>Use either the left/right arrow keys or the "ad" keys to move in left and right directions. This game adheres to the laws of gravity, so you cannot move downwards, you can only fall. To jump, press the spacebar!</p>
+          <p>Use either the <b>left/right arrow keys</b> or the <b>"ad" keys</b> to move in left and right directions. This game adheres to the laws of gravity, so you cannot move downwards, you can only fall. To jump, press the <b>spacebar</b>!</p>
           <h3>Levels</h3>
           <p>Level one is themed for a dark forest. Don't hit the enemies or fall into the pits. Once you run all the way to the end, you complete the game!</p>
-          <p>If you need to stop, press escape "esc" to exit the level and return to the hub</p>
+          <p>Level two is underwater themed! Both levels used colormap design and parallax scrolling.</p>
+          <p>If you need to stop, press escape <b>"esc"</b> to exit the level and return to the hub.</p>
           <h3>Minigame</h3>
-          <p>The minigame is a game you can play at any time. Try and collect as many coins as you can before the 30 second timer runs out. When the timer runs out, the game ends and you exit. Press return/enter to go to the hub.</p>
+          <p>The minigame is a game you can play at any time. Try and collect as many coins as you can before the 30 second timer runs out. When the timer runs out, the game ends and you exit. Press <b>return/enter</b> to go to the hub.</p>
           <h3>Thanks for playing! We really hope you enjoyed.</h3>
       </div>
   </body>
