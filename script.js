@@ -19,7 +19,6 @@ let scrolling = false;
 let test_hitmap;
 let level1_hitmap;
 
-
 let points;
 let temp;
 let noiseLocation = 0;
@@ -37,8 +36,6 @@ let aniR = [];
 let aniO = [];
 let aniF = [];
 let aniAtk = [];
-
-
 
 function preload() {
 
@@ -257,6 +254,7 @@ function levelOne(){
     p.display();
     p.moveinlevel();
     playing = true;
+    enemy1.display();
 }
 
 function levelTwo(){
@@ -335,6 +333,16 @@ function bossLevel(){
     
 }
 
+function restart_level1() {
+    bg_x = 0;
+    bushes_x = 0;
+    front_leaves_x = 0;
+    trees_x = 0;
+    scrolling = false;
+    p.x = 60;
+    p.y = 402;
+}
+
 //player class prototype
 class Player{
     constructor(x,y){
@@ -376,14 +384,6 @@ class Player{
         this.middleX = this.fake_x + this.size/2;
         this.middleY = this.y + this.size/2;
     }
-    death_detection(x, y) {
-        let temp = blue(hitmap.get(x,y));
-            if (temp == 0) {
-            //console.log(temp);
-            return true;
-            }
-            return false;
-    }
     move(){
         //compute our current sensor position
         this.findPlayerBounds();
@@ -412,6 +412,9 @@ class Player{
         this.findPlayerBounds_level();
         this.handleFallJumpMovement();
         this.handleDoorMovement();
+        if (this.down > 600) {
+            restart_level1();
+        }
         
         // movement right before reaching half the screen
         if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
@@ -467,9 +470,6 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
         }
-        // if (this.death_detection(this.fake_x, this.middleY)) {
-        //     gamestate = ;
-        // }
 
     }
     handleFallJumpMovement() {
@@ -708,14 +708,16 @@ class Sprite {
 
 class Enemy{
    constructor(x,y){
-       this.x = x;
+       this.x = x + (bg_x * -1);
        this.y = y;
        this.speed = 1;
    }
 
-   display(){
-       if (gamestate == 2 || gamestate == 3) {
-           rect(this.x,this.y,50,80);
+    display(){
+        console.log(this.x);
+        if (gamestate == 2 || gamestate == 3) {
+           fill(255, 0, 0);
+           rect(this.x,this.y,50,50);
        }
-   }
+    }
 }
