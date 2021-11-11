@@ -487,14 +487,14 @@ class Player{
         // movement right before reaching half the screen
         if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
             if (!this.isPixelSolid(this.right, this.middleY)) {
-                this.x += 4;
+                this.x += 3;
             }
         } // background movement to make the player look like theyre going left
         if ((gamestate == 2 || gamestate == 3) && this.x <= 400 && bg_x < 0 && (keyIsDown(65) || keyIsDown(37))) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x = 400;
                 scrolling = true;
-                bg_x += 4;
+                bg_x += 3;
                 bushes_x += 2;
                 front_leaves_x += 1;
                 trees_x += 1;
@@ -504,14 +504,14 @@ class Player{
         } // movement left after finishing the background scroll
         if ((gamestate == 2 || gamestate == 3) && bg_x >= -3468 && (keyIsDown(65) || keyIsDown(37)) && scrolling == false) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
-                this.x -= 4;
+                this.x -= 3;
             }
         } // background movement to make the player look like theyre going right
         if ((gamestate == 2 || gamestate == 3) && this.x >= 400 && bg_x > -3467 && (keyIsDown(68) || keyIsDown(39))) {
             if (!this.isPixelSolid(this.right, this.middleY)) {
                 this.x = 400;
                 scrolling = true;
-                bg_x -= 4;
+                bg_x -= 3;
                 bushes_x -= 2;
                 trees_x -= 1;
                 front_leaves_x -= 1;
@@ -522,7 +522,7 @@ class Player{
         if ((gamestate == 2 || gamestate == 3) && bg_x >= 0 && (keyIsDown(65) || keyIsDown(37)) && scrolling == true) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 bg_x = 0;
-                this.x -= 4;
+                this.x -= 3;
                 bushes_x = 0;
                 front_leaves_x = 0;
                 trees_x = 0;
@@ -537,7 +537,7 @@ class Player{
                 bushes_x = -2312;
                 trees_x = -1156;
                 front_leaves_x = -1156;
-                this.x += 4;
+                this.x += 3;
                 scrolling = false;
                 //console.log(sand_x,fg_x);
                 sand_x = -1156;
