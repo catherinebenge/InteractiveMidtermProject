@@ -212,8 +212,8 @@ function debug(){
 //levels screens 
 function startScreen(){
     //add side-scrolling parallax bg later for the characters to "walk" on
-    background(128);
-    fill('#00ff00');
+    background(135,206,250);
+    fill(255,160,122);
     rect(0,500,800,100);
     fill(0);
 
