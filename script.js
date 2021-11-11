@@ -7,7 +7,8 @@ let playing = false;
 let firstgame = true;
 let coins = [];
 let mgpoints;
-let overlapping;
+
+
 let bg_x = 0;
 let bushes;
 let bushes_x = 0;
@@ -18,6 +19,13 @@ let front_leaves_x = 0;
 let scrolling = false;
 let test_hitmap;
 let level1_hitmap;
+
+let level2_hitmap;
+let level2bg;
+let foreground;
+let fg_x = 0;
+let sand;
+let sand_x = 0;
 
 let level1_completed = false;
 let enemy_image;
@@ -56,6 +64,8 @@ function preload() {
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
+
+//level one
     //load assets
   test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
   level1_hitmap = loadImage('images/level1hitmap.png');
@@ -65,10 +75,17 @@ function preload() {
   front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
     enemy_image = loadImage('images/enemy.gif');
 //level two
+  level2_hitmap = loadImage('images/level2hitmap.png');
+  far = loadImage('images/bgs/far.png');
+  level2bg = loadImage('images/bgs/level2bg.png');
+  foreground = loadImage('images/parallax_water/foregound-merged.png');
+  sand = loadImage('images/parallax_water/sand.png');
 }
 
 function setup() {
     createCanvas(800,600);
+    level1_hitmap.resize(4268, 600);
+    level1bg.resize(4268, 600);
     
     textFont(at01);
     textSize(20);
@@ -230,7 +247,6 @@ function hubScreen(){
 
 function levelOne(){
     // moving hitmap for first lvl
-    level1_hitmap.resize(4268, 600);
     hitmap = level1_hitmap;
     image(hitmap, bg_x, 0);
     background(100);
@@ -250,10 +266,10 @@ function levelOne(){
     for (let i=0; i < 7; i++) {
         image(bushes, bushes_x + (i * 512), 200);
     }
-    level1bg.resize(4268, 600);
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
+    //playing = true;
     enemy1.display();
     enemy2.display();
     enemy3.display();
@@ -262,8 +278,20 @@ function levelOne(){
 }
 
 function levelTwo(){
-    
-    
+    //level2_hitmap, level2bg , foreground, sand 
+    hitmap = level2_hitmap;
+    image(hitmap, bg_x, 0);
+    image(far,bg_x,0);
+    for (let i=0; i < 13; i++) {
+        image(sand, sand_x + (i * 256), 210);
+    }
+    for (let i=0; i < 7; i++) {
+        image(foreground, fg_x + (i * 512), 220);
+    }
+    image(level2bg,bg_x,0);
+    p.display();
+    p.moveinlevel();
+    //playing = true;
 }
 
 function miniGame(){
@@ -470,6 +498,8 @@ class Player{
                 bushes_x += 2;
                 front_leaves_x += 1;
                 trees_x += 1;
+                sand_x += 2; 
+                fg_x +=1;
             }
         } // movement left after finishing the background scroll
         if ((gamestate == 2 || gamestate == 3) && bg_x >= -3468 && (keyIsDown(65) || keyIsDown(37)) && scrolling == false) {
@@ -485,6 +515,8 @@ class Player{
                 bushes_x -= 2;
                 trees_x -= 1;
                 front_leaves_x -= 1;
+                sand_x -= 2; 
+                fg_x -=1;
             }
         } // stop background scroll in the beginning and make the player move left
         if ((gamestate == 2 || gamestate == 3) && bg_x >= 0 && (keyIsDown(65) || keyIsDown(37)) && scrolling == true) {
@@ -495,6 +527,8 @@ class Player{
                 front_leaves_x = 0;
                 trees_x = 0;
                 scrolling = false;
+                sand_x += 0; 
+                fg_x += 0;
             }
         } // stop background scroll at the end and make the player move right
         if ((gamestate == 2 || gamestate == 3) && bg_x <= -3468 && (keyIsDown(68) || keyIsDown(39)) && scrolling == true) {
@@ -505,6 +539,9 @@ class Player{
                 front_leaves_x = -1156;
                 this.x += 4;
                 scrolling = false;
+                //console.log(sand_x,fg_x);
+                sand_x = -1156;
+                fg_x = -2312;
             }
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
