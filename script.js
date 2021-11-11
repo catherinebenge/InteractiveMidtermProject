@@ -76,7 +76,6 @@ function preload() {
     at01 = loadFont('at01.ttf');
 
     //sound
-    startbgm = loadSound('sounds/health_imagination.mp3');
     jumpsfx = loadSound('sounds/jump.mp3');
 
 //level one
@@ -160,7 +159,6 @@ function setup() {
         let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
         aniAtk.push(img);
     }
-    character = new Sprite(chara,1);
     
 
 }
@@ -195,29 +193,6 @@ function draw() {
 }
 
 function keyPressed(){
-    //console.log(keyCode);
-    
-    //character selection using arrow keys
-        // 0 = Red, 1 = Onion, 2 = Fairy
-            if(keyCode == LEFT_ARROW) {
-                chara -= 1;
-                //action = "walkL";
-            }
-            else if(keyCode == RIGHT_ARROW){
-                chara += 1;
-                //action = "walkR";
-            }
-
-            if(chara < 0){
-                chara = 0;
-            }
-            if(chara > 2){
-                chara = 2;
-            }
-            
-            if(keyCode == ENTER){
-                gamestate = 1;
-            }
     //console.log(keyCode)   
 
     
@@ -249,8 +224,6 @@ function startScreen(){
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
     
-    character.display(350,445);
-    textAlign(LEFT); 
     chara_select();
     if(chara == 0){
         image(redimg,350,450);
