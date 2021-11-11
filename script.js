@@ -76,11 +76,8 @@ function preload() {
     at01 = loadFont('at01.ttf');
 
     //sound
-<<<<<<< HEAD
     startbgm = loadSound('sounds/health_imagination.mp3');
-=======
     jumpsfx = loadSound('sounds/jump.mp3');
->>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 
 //level one
     //load assets
@@ -201,7 +198,6 @@ function draw() {
 }
 
 function keyPressed(){
-<<<<<<< HEAD
     //console.log(keyCode);
     
     //character selection using arrow keys
@@ -226,9 +222,7 @@ function keyPressed(){
                 gamestate = 1;
                 startbgm.play();
             }
-=======
     //console.log(keyCode)   
->>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 
     
 }
@@ -259,10 +253,8 @@ function startScreen(){
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
     
-<<<<<<< HEAD
     character.display(350,445);
     textAlign(LEFT); 
-=======
     chara_select();
     if(chara == 0){
         image(redimg,350,450);
@@ -275,7 +267,6 @@ function startScreen(){
     }
 
     textAlign(LEFT);
->>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 }
 
 function hubScreen(){
