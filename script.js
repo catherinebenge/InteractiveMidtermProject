@@ -626,6 +626,7 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
+          jumpsfx.play();
         }
         
 
@@ -826,7 +827,6 @@ class Sprite {
             this.index = this.index + this.speed;
             //console.log(action);
         if(gamestate == 0){
-            console.log(action);
             if(gamestate == 0){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
