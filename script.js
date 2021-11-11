@@ -34,7 +34,7 @@ let temp;
 let noiseLocation = 0;
 let at01;
 
-let playersprites;
+let playersprites, redimg, onionimg, fairyimg;
 let spritedata;
 let character;
 let enemydata;
@@ -47,7 +47,7 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
-let startbgm, hubbgm, level1bgm, level2bgm;
+let startbgm, hubbgm, level1bgm, level2bgm, jumpsfx;
 
 
 
@@ -64,11 +64,14 @@ function preload() {
 
     spritedata = loadJSON('spriteframes.json');
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
+    redimg = loadImage('images/spritesheets/red.png');
+    onionimg = loadImage('images/spritesheets/onion.png');
+    fairyimg = loadImage('images/spritesheets/fairy.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
 
     //sound
-    //startbgm = loadSound('sounds/')
+    jumpsfx = loadSound('sounds/jump.mp3');
 
 //level one
     //load assets
@@ -101,7 +104,7 @@ function setup() {
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
     
-    gamestate=2;
+    gamestate=0;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -141,7 +144,7 @@ function setup() {
         let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
         aniAtk.push(img);
     }
-    character = new Sprite(chara,1);
+    
 
 }
 
@@ -174,29 +177,7 @@ console.log(p.fake_x, p.y);
 }
 
 function keyPressed(){
-    //console.log(keyCode);
-    
-    //character selection using arrow keys
-        // 0 = Red, 1 = Onion, 2 = Fairy
-            if(keyCode == LEFT_ARROW) {
-                chara -= 1;
-                //action = "walkL";
-            }
-            else if(keyCode == RIGHT_ARROW){
-                chara += 1;
-                //action = "walkR";
-            }
-
-            if(chara < 0){
-                chara = 0;
-            }
-            if(chara > 2){
-                chara = 2;
-            }
-            
-            if(keyCode == ENTER){
-                gamestate = 1;
-            }
+    //console.log(keyCode)   
 
     
 }
@@ -227,10 +208,18 @@ function startScreen(){
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
     
-    character.display(350,445);
-    textAlign(LEFT);
+    chara_select();
+    if(chara == 0){
+        image(redimg,350,450);
+    }
+    else if(chara == 1){
+        image(fairyimg,350,450);
+    }
+    else if(chara == 2){
+        image(onionimg,350,450);
+    }
 
-    
+    textAlign(LEFT);
 }
 
 function hubScreen(){
@@ -384,6 +373,27 @@ function level1_complete() {
     p.y = 350;
 }
 
+function chara_select(){
+        if(keyIsDown(37)) {
+            chara -= 1;
+        }
+        if(keyIsDown(39)){
+            chara += 1;
+        }
+
+        if(chara < 0){
+            chara = 0;
+        }
+        if(chara > 2){
+            chara = 2;
+        }
+        
+        if(keyIsDown(13)){
+            character = new Sprite(chara,1);
+            gamestate = 1;
+        }
+}
+
 //player class prototype
 class Player{
     constructor(x,y){
@@ -460,6 +470,7 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
+          jumpsfx.play();
         }
     }
     moveinlevel() {
@@ -741,10 +752,10 @@ class Sprite {
         if (this.ani == 0){
             this.animation = aniR;
         }
-        else if (this.ani == 1){
+        else if (this.ani == 2){
             this.animation = aniO;
         }
-        else if (this.ani == 2){
+        else if (this.ani == 1){
             this.animation = aniF;
         }
     
