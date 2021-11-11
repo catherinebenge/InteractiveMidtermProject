@@ -19,6 +19,8 @@ let scrolling = false;
 let test_hitmap;
 let level1_hitmap;
 
+let level1_completed = false;
+let enemy_image;
 let points;
 let temp;
 let noiseLocation = 0;
@@ -62,7 +64,7 @@ function preload() {
   bushes = loadImage('images/parallax_forest1/bushes.png');
   trees = loadImage('images/parallax_forest1/trees.png');
   front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
-
+    enemy_image = loadImage('images/enemy.gif');
 //level two
 }
 
@@ -81,9 +83,12 @@ function setup() {
     //set gamestate
 
     // enemies
-    enemy1 = new Enemy(200,402);
+    enemy1 = new Enemy(720, 525);
+    enemy2 = new Enemy(1640, 370);
+    enemy3 = new Enemy(2370, 415);
+    enemy4 = new Enemy(3710, 80);
     
-    gamestate=3;
+    gamestate=2;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -130,7 +135,7 @@ function setup() {
 }
 
 function draw() { 
-
+console.log(p.fake_x, p.y);
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
       case 0:
@@ -239,7 +244,7 @@ function levelOne(){
     background(100);
      //trees
     for (let i=0; i < 4; i++) {
-        tree_random = [50, 100, 0, -50];
+        let tree_random = [50, 100, 0, -50];
         image(trees, trees_x + (i * 512 - tree_random[i]), 200);
     }
     // leaves
@@ -256,8 +261,10 @@ function levelOne(){
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
-    playing = true;
     enemy1.display();
+    enemy2.display();
+    enemy3.display();
+    enemy4.display();
 }
 
 function levelTwo(){
@@ -346,6 +353,13 @@ function restart_level1() {
     p.y = 402;
 }
 
+function level1_complete() {
+    level1_completed = true;
+    gamestate = 1;
+    p.x = 90;
+    p.y = 350;
+}
+
 //player class prototype
 class Player{
     constructor(x,y){
@@ -383,11 +397,11 @@ class Player{
     }
     findPlayerBounds_level(){
         this.fake_x = this.x + (bg_x * -1);
-        this.left = this.fake_x - 3;
+        this.left = this.fake_x - 30;
         this.right = this.fake_x + this.size + 3;
-        this.up = this.y - 3;
+        this.up = this.y - 25;
         this.down = this.y + this.size + 3;
-        this.middleX = this.fake_x + this.size/2;
+        this.middleX = (this.fake_x + this.size/2) - 25;
         this.middleY = this.y + this.size/2;
     }
     move(){
@@ -421,10 +435,25 @@ class Player{
         this.findPlayerBounds_level();
         this.handleFallJumpMovement();
         this.handleDoorMovement();
+
+        // DEATH AND COMPLETION
         if (this.down > 600) {
             restart_level1();
         }
-        
+        if (this.fake_x > 4200) {
+            level1_complete();
+        }
+        // EXIT AT ANY TIME
+        if (keyIsDown(27)) {
+            gamestate = 1;
+            bg_x = 0;
+            bushes_x = 0;
+            front_leaves_x = 0;
+            trees_x = 0;
+            scrolling = false;
+            p.x = 60;
+            p.y = 402;
+        }
         // movement right before reaching half the screen
         if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
             if (!this.isPixelSolid(this.right, this.middleY)) {
@@ -535,7 +564,7 @@ class Player{
     handleDoorMovement(){
         if(gamestate == 1){
         //check if a door was entered
-        if(this.isDoor(this.middleX, this.up) && keyIsDown(38) && !this.locked && this.middleX > 52 && this.middleX < 94){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 52 && this.middleX < 94){
             console.log('entered selection door');
             //gamestate = 0;
         }
@@ -545,9 +574,11 @@ class Player{
             fill(255);
             text('main menu',45,365);
         }
-        if(this.isDoor(this.middleX, this.up) && keyIsDown(38) && !this.locked && this.middleX > 401 && this.middleX < 442){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 401 && this.middleX < 442){
             console.log('entered lvl1 door');
-            //gamestate = 2;
+            gamestate = 2;
+            p.x = 75;
+            p.y = 400;
         }
         if(mouseX > 401 && mouseX < 442 && mouseY > 232 && mouseY < 297){
             fill(0,150);
@@ -555,7 +586,7 @@ class Player{
             fill(255);
             text('level 1',405,215);
         }
-        if(this.isDoor(this.middleX, this.up) && keyIsDown(38) && !this.locked && this.middleX > 522 && this.middleX < 563){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 522 && this.middleX < 563){
             console.log('entered lvl2 door');
             //gamestate = 3;
         }
@@ -565,7 +596,7 @@ class Player{
             fill(255);
             text('level 2',527,325);
         }
-        if(this.isDoor(this.middleX, this.up) && keyIsDown(38) && !this.locked && this.middleX > 670 && this.middleX < 712 && this.middleY > 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 670 && this.middleX < 712 && this.middleY > 300){
             console.log('entered minigame door');
             gamestate = 4;
         }
@@ -575,7 +606,7 @@ class Player{
             fill(255);
             text('minigame',670,443);
         }
-        if(this.isDoor(this.middleX, this.up) && keyIsDown(38) && !this.locked && this.middleX > 692 && this.middleX < 744 && this.middleY < 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 692 && this.middleX < 744 && this.middleY < 300){
             console.log('entered boss door');
             //gamestate = 5;
         } 
@@ -585,7 +616,7 @@ class Player{
             fill(255);
             text('boss',701,105);
         }
-        else if(this.isDoor(this.middleX, this.up) && keyIsDown(38) && this.locked){
+        else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.locked){
             noStroke();
             fill(0,150);
             rect(this.middleX-50,this.up-14,100,20);
@@ -716,17 +747,28 @@ class Sprite {
 }
 
 class Enemy{
-   constructor(x,y){
-       this.x = x + (bg_x * -1);
-       this.y = y;
-       this.speed = 1;
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.speed = 1;
+        this.actual_x;
    }
-
+    update_pos() {
+        this.actual_x = this.x - (bg_x * -1);
+    }
     display(){
-        console.log(this.x);
+        this.update_pos();
+        this.enemy_detection();
         if (gamestate == 2 || gamestate == 3) {
            fill(255, 0, 0);
-           rect(this.x,this.y,50,50);
+           imageMode(CENTER);
+           image(enemy_image, this.actual_x,this.y, 75, 75);
+           imageMode(CORNER);
        }
+    }
+    enemy_detection() {
+        if (dist(p.fake_x, p.middleY, this.x, this.y) < 45) {
+            restart_level1();
+        }
     }
 }
