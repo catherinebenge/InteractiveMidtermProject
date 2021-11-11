@@ -96,7 +96,7 @@ function setup() {
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
     
-    gamestate=1;
+    gamestate=2;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -223,7 +223,6 @@ function startScreen(){
 
     
     character.display(350,445);
-    character.animate();
     textAlign(LEFT);
 
     
@@ -242,7 +241,6 @@ function hubScreen(){
     text("press up arrow to enter a door",500,20);
     p.display();
     p.move();
-    character.animate();
 }
 
 function levelOne(){
@@ -274,7 +272,6 @@ function levelOne(){
     enemy2.display();
     enemy3.display();
     enemy4.display();
-    character.animate();
 }
 
 function levelTwo(){
@@ -400,6 +397,7 @@ class Player{
         imageMode(CENTER);
         // rect(this.x, this.y, this.size, this.size);
         character.display(this.x,this.y);
+        character.animate();
         imageMode(CORNER);
         // draw sensors
         // fill(0,0,255);
@@ -444,15 +442,15 @@ class Player{
         if(keyIsDown(65) || keyIsDown(37)){
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x -= 3;
+                action = "walkL";
               }
-            action = "walkL";
         }
         if(keyIsDown(68) || keyIsDown(39)){
            // only all movement if the next pixel is not solid
             if (!this.isPixelSolid(this.right, this.middleY)) {
                 this.x += 3;
+                action = "walkR";
             }
-            action = "walkR";
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
@@ -488,6 +486,7 @@ class Player{
         if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
             if (!this.isPixelSolid(this.right, this.middleY)) {
                 this.x += 3;
+                action = "walkR";
             }
         } // background movement to make the player look like theyre going left
         if ((gamestate == 2 || gamestate == 3) && this.x <= 400 && bg_x < 0 && (keyIsDown(65) || keyIsDown(37))) {
@@ -500,11 +499,13 @@ class Player{
                 trees_x += 1;
                 sand_x += 2; 
                 fg_x +=1;
+                action = "walkL";
             }
         } // movement left after finishing the background scroll
         if ((gamestate == 2 || gamestate == 3) && bg_x >= -3468 && (keyIsDown(65) || keyIsDown(37)) && scrolling == false) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x -= 3;
+                action = "walkL";
             }
         } // background movement to make the player look like theyre going right
         if ((gamestate == 2 || gamestate == 3) && this.x >= 400 && bg_x > -3467 && (keyIsDown(68) || keyIsDown(39))) {
@@ -517,6 +518,7 @@ class Player{
                 front_leaves_x -= 1;
                 sand_x -= 2; 
                 fg_x -=1;
+                action = "walkR";
             }
         } // stop background scroll in the beginning and make the player move left
         if ((gamestate == 2 || gamestate == 3) && bg_x >= 0 && (keyIsDown(65) || keyIsDown(37)) && scrolling == true) {
@@ -529,6 +531,7 @@ class Player{
                 scrolling = false;
                 sand_x += 0; 
                 fg_x += 0;
+                action = "walkL";
             }
         } // stop background scroll at the end and make the player move right
         if ((gamestate == 2 || gamestate == 3) && bg_x <= -3468 && (keyIsDown(68) || keyIsDown(39)) && scrolling == true) {
@@ -542,10 +545,12 @@ class Player{
                 //console.log(sand_x,fg_x);
                 sand_x = -1156;
                 fg_x = -2312;
+                action = "walkR";
             }
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
+          action = "jump";
         }
         // if (this.death_detection(this.fake_x, this.middleY)) {
         //     gamestate = ;
@@ -608,7 +613,7 @@ class Player{
         //check if a door was entered
         if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 52 && this.middleX < 94){
             console.log('entered selection door');
-            //gamestate = 0;
+            gamestate = 0;
         }
         if(mouseX > 52 && mouseX < 94 && mouseY > 376 && mouseY < 443){
             fill(0,150);
@@ -756,7 +761,7 @@ class Sprite {
             
             this.index = this.index + this.speed;
             console.log(action);
-            if(gamestate == 0){
+            if(gamestate == 0 || gamestate == 2){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
                         this.index = 3;
