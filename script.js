@@ -47,7 +47,7 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
-let startbgm, hubbgm, level1bgm, level2bgm, jumpsfx;
+let jumpsfx;
 let death_sound;
 let complete_sound;
 let startbgm, hubbgm, level1bgm, level2bgm;
