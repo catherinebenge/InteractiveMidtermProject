@@ -219,7 +219,7 @@ function startScreen(){
 
     textAlign(CENTER);
     textSize(100);
-    text('[Placeholder Title]',width/2,150);
+    text('THE ADVENTURES\nOF ONION',width/2,150);
     textSize(30);
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
