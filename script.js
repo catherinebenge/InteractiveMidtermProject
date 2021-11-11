@@ -214,8 +214,8 @@ function debug(){
 //levels screens 
 function startScreen(){
     //add side-scrolling parallax bg later for the characters to "walk" on
-    background(128);
-    fill('#00ff00');
+    background(135,206,250);
+    fill(255,160,122);
     rect(0,500,800,100);
     fill(0);
 
@@ -628,6 +628,7 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
+          jumpsfx.play();
         }
         
 
@@ -828,7 +829,6 @@ class Sprite {
             this.index = this.index + this.speed;
             //console.log(action);
         if(gamestate == 0){
-            console.log(action);
             if(gamestate == 0){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
