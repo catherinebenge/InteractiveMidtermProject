@@ -390,7 +390,7 @@ class Player{
     constructor(x,y){
         this.x = x;
         this.y = y;
-        this.size = 25;
+        this.size = 20;
         this.ySpeed = 0;
         this.gravity = 0.3;
         this.findPlayerBounds();
@@ -406,19 +406,20 @@ class Player{
         character.animate();
         imageMode(CORNER);
         // draw sensors
-        // fill(0,0,255);
-        // ellipse(this.left, this.middleY, 5, 5);
-        // ellipse(this.right, this.middleY, 5, 5);
-        // ellipse(this.middleX, this.up, 5, 5);
-        // ellipse(this.middleX, this.down, 5, 5);
+         //fill(0,0,255);
+         //ellipse(this.left, this.middleY, 5, 5);
+         //ellipse(this.right, this.middleY, 5, 5);
+        //fill(255,0,0);
+         //ellipse(this.middleX, this.up, 5, 5);
+         //ellipse(this.middleX, this.down, 5, 5);
     }
     findPlayerBounds(){
-        this.left = this.x - 3;
+        this.left = this.x - 25;
         this.right = this.x + this.size + 3;
-        this.up = this.y - 3;
+        this.up = this.y - 20;
         this.down = this.y + this.size + 3;
-        this.middleX = this.x + this.size/2;
-        this.middleY = this.y + this.size/2;
+        this.middleX = this.x;
+        this.middleY = this.y;
     }
     findPlayerBounds_level(){
         this.fake_x = this.x + (bg_x * -1);
@@ -824,7 +825,7 @@ class Sprite {
 //                    
 //                }
 //            }
-//            //
+//           
             
             
         }   
