@@ -72,7 +72,6 @@ function setup() {
     
     textFont(at01);
     textSize(20);
-    //set gamestate
 
     // enemies
     enemy1 = new Enemy(720, 525);
@@ -80,7 +79,7 @@ function setup() {
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
     
-    gamestate=2;
+    gamestate=1;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
