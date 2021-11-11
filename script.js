@@ -71,7 +71,7 @@ function preload() {
     at01 = loadFont('at01.ttf');
 
     //sound
-    //startbgm = loadSound('sounds/')
+    startbgm = loadSound('sounds/health_imagination.mp3');
 
 //level one
     //load assets
@@ -155,7 +155,6 @@ function setup() {
         aniAtk.push(img);
     }
     character = new Sprite(chara,1);
-
 }
 
 function draw() { 
@@ -210,6 +209,7 @@ function keyPressed(){
             
             if(keyCode == ENTER){
                 gamestate = 1;
+                startbgm.play();
             }
 
     
@@ -242,9 +242,7 @@ function startScreen(){
 
     
     character.display(350,445);
-    textAlign(LEFT);
-
-    
+    textAlign(LEFT); 
 }
 
 function hubScreen(){
@@ -402,6 +400,10 @@ function restart_level1() {
 }
 
 function level1_complete() {
+    bg_x = 0;
+    bushes_x = 0;
+    front_leaves_x = 0;
+    trees_x = 0;
     level1_completed = true;
     gamestate = 1;
     p.x = 90;
