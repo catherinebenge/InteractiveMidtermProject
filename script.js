@@ -160,12 +160,9 @@ function setup() {
         let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
         aniAtk.push(img);
     }
-<<<<<<< HEAD
     character = new Sprite(chara,1);
-=======
     
 
->>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 }
 
 function draw() { 
@@ -220,7 +217,6 @@ function keyPressed(){
             
             if(keyCode == ENTER){
                 gamestate = 1;
-                startbgm.play();
             }
     //console.log(keyCode)   
 
