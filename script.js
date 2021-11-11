@@ -96,7 +96,9 @@ function preload() {
 }
 
 function setup() {
-    createCanvas(800,600);
+    //createCanvas(800,600);
+    let canvas = createCanvas(800, 600);
+    canvas.position(0, 0);
     level1_hitmap.resize(4268, 600);
     level1bg.resize(4268, 600);
     
@@ -164,7 +166,7 @@ function setup() {
 }
 
 function draw() { 
-    console.log(action);
+    //console.log(action);
 //console.log(p.fake_x, p.y);
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
