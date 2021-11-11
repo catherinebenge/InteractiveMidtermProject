@@ -42,26 +42,31 @@ let aniAtk = [];
 
 function preload() {
 
-//bgs and hitmaps
+//hub and minigame hitmap
     hub_hm = loadImage('images/hitmaps/hubhitmapwdoors.png');
     mg_hm = loadImage('images/hitmaps/mghitmap.png');
     hub_bg = loadImage('images/bgs/bghubwdoors.png');
     mg_bg = loadImage('images/bgs/bgmg.png');
+    
 //misc assets
     coin = loadImage('images/misc/coin.png');
     lock = loadImage('images/misc/lock.png');
 
+//sprite data
     spritedata = loadJSON('spriteframes.json');
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
-    //load assets
+
+//level one
   test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
   level1_hitmap = loadImage('images/level1hitmap.png');
   level1bg = loadImage('images/parallax_forest2/j1.png');
   bushes = loadImage('images/parallax_forest1/bushes.png');
   trees = loadImage('images/parallax_forest1/trees.png');
   front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
+
+//level two
 }
 
 function setup() {
@@ -81,7 +86,7 @@ function setup() {
     // enemies
     enemy1 = new Enemy(200,402);
     
-    gamestate=1;
+    gamestate=3;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -338,7 +343,7 @@ class Player{
     constructor(x,y){
         this.x = x;
         this.y = y;
-        this.size = 25;
+        this.size = 30;
         this.ySpeed = 0;
         this.gravity = 0.3;
         this.findPlayerBounds();
@@ -347,22 +352,25 @@ class Player{
         this.fake_x = x;
     }
     display(){
+        imageMode(CENTER);
         fill(0,255,0);
         // rect(this.x, this.y, this.size, this.size);
         character.display(this.x,this.y);
+        imageMode(CORNER);
         // draw sensors
-        fill(0,0,255);
-        ellipse(this.left, this.middleY, 5, 5);
-        ellipse(this.right, this.middleY, 5, 5);
-        ellipse(this.middleX, this.up, 5, 5);
-        ellipse(this.middleX, this.down, 5, 5);
+//        fill(0,0,255);
+//        ellipse(this.left, this.middleY, 5, 5);
+//        ellipse(this.right, this.middleY, 5, 5);
+//        fill(255,0,0)
+//        ellipse(this.middleX, this.up, 5, 5);
+//        ellipse(this.middleX, this.down, 5, 5);
     }
     findPlayerBounds(){
-        this.left = this.x - 3;
+        this.left = this.x - 20;
         this.right = this.x + this.size + 3;
-        this.up = this.y - 3;
-        this.down = this.y + this.size + 3;
-        this.middleX = this.x + this.size/2;
+        this.up = this.y - 13;
+        this.down = this.y + this.size + 1;
+        this.middleX = this.x + this.size/2 - 10;
         this.middleY = this.y + this.size/2;
     }
     findPlayerBounds_level(){
@@ -401,8 +409,11 @@ class Player{
                 this.x += 3;
             }
         }
-        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
-          this.ySpeed = -10;
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down) && gamestate == 4) {
+            this.ySpeed = -35;
+        }   
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down) && gamestate != 4) {
+            this.ySpeed = -10;
         }
     }
     moveinlevel() {
