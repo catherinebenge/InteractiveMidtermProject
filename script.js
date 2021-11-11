@@ -47,10 +47,12 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
-
+let death_sound;
+let complete_sound;
 
 function preload() {
-
+    death_sound = loadSound('images/death.mp3');
+    complete_sound = loadSound('images/complete.mp3');
 //bgs and hitmaps
     hub_hm = loadImage('images/hitmaps/hubhitmapwdoors.png');
     mg_hm = loadImage('images/hitmaps/mghitmap.png');
@@ -95,8 +97,18 @@ function setup() {
     enemy2 = new Enemy(1640, 370);
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
+
+    enemy5 = new Enemy(725, 325);
+    enemy6 = new Enemy(1000, 470);
+    enemy7 = new Enemy(1275, 470);
+    enemy8 = new Enemy(1480, 360);
+    enemy9 = new Enemy(1920, 310);
+    enemy10 = new Enemy(2610, 160);
+    enemy11 = new Enemy(2997, 473);
+    enemy12 = new Enemy(3444, 253);
+    enemy13 = new Enemy(3874, 353);
     
-    gamestate=2;
+    gamestate=3;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -289,6 +301,15 @@ function levelTwo(){
     p.display();
     p.moveinlevel();
     //playing = true;
+    enemy5.display();
+    enemy6.display();
+    enemy7.display();
+    enemy8.display();
+    enemy9.display();
+    enemy10.display();
+    enemy11.display();
+    enemy12.display();
+    enemy13.display();
 }
 
 function miniGame(){
@@ -466,9 +487,11 @@ class Player{
         // DEATH AND COMPLETION
         if (this.down > 600) {
             restart_level1();
+            death_sound.play();
         }
         if (this.fake_x > 4200) {
             level1_complete();
+            complete_sound.play();
         }
         // EXIT AT ANY TIME
         if (keyIsDown(27)) {
@@ -855,6 +878,7 @@ class Enemy{
     enemy_detection() {
         if (dist(p.fake_x, p.middleY, this.x, this.y) < 45) {
             restart_level1();
+            death_sound.play();
         }
     }
 }
