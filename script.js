@@ -721,7 +721,7 @@ class Player{
             fill(255);
             text('level 2',710,95);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX > 697 && this.middleX < 785 && this.middleY > 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX > 670 && this.middleX < 785 && this.middleY > 300){
             console.log('entered minigame door');
             gamestate = 4;
         }
