@@ -28,13 +28,14 @@ let sand;
 let sand_x = 0;
 
 let level1_completed = false;
+let level2_completed = true;
 let enemy_image;
 let points;
 let temp;
 let noiseLocation = 0;
 let at01;
 
-let playersprites;
+let playersprites, redimg, onionimg, fairyimg;
 let spritedata;
 let character;
 let enemydata;
@@ -47,6 +48,7 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
+let jumpsfx;
 let death_sound;
 let complete_sound;
 let startbgm, hubbgm, level1bgm, level2bgm;
@@ -67,11 +69,18 @@ function preload() {
 
     spritedata = loadJSON('spriteframes.json');
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
+    redimg = loadImage('images/spritesheets/red.png');
+    onionimg = loadImage('images/spritesheets/onion.png');
+    fairyimg = loadImage('images/spritesheets/fairy.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
 
     //sound
+<<<<<<< HEAD
     startbgm = loadSound('sounds/health_imagination.mp3');
+=======
+    jumpsfx = loadSound('sounds/jump.mp3');
+>>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 
 //level one
     //load assets
@@ -154,7 +163,12 @@ function setup() {
         let img = playersprites.get(pos.x,pos.y,pos.w,pos.h);
         aniAtk.push(img);
     }
+<<<<<<< HEAD
     character = new Sprite(chara,1);
+=======
+    
+
+>>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 }
 
 function draw() { 
@@ -187,6 +201,7 @@ function draw() {
 }
 
 function keyPressed(){
+<<<<<<< HEAD
     //console.log(keyCode);
     
     //character selection using arrow keys
@@ -211,6 +226,9 @@ function keyPressed(){
                 gamestate = 1;
                 startbgm.play();
             }
+=======
+    //console.log(keyCode)   
+>>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 
     
 }
@@ -241,8 +259,23 @@ function startScreen(){
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
     
+<<<<<<< HEAD
     character.display(350,445);
     textAlign(LEFT); 
+=======
+    chara_select();
+    if(chara == 0){
+        image(redimg,350,450);
+    }
+    else if(chara == 1){
+        image(fairyimg,350,450);
+    }
+    else if(chara == 2){
+        image(onionimg,350,450);
+    }
+
+    textAlign(LEFT);
+>>>>>>> 3b17ab8a5517535c6bec1cfd79f3935626823534
 }
 
 function hubScreen(){
@@ -293,7 +326,6 @@ function levelOne(){
 }
 
 function levelTwo(){
-    //level2_hitmap, level2bg , foreground, sand 
     hitmap = level2_hitmap;
     image(hitmap, bg_x, 0);
     image(far,bg_x,0);
@@ -384,11 +416,6 @@ function setTimer(){
    time = 30; 
 }
 
-function bossLevel(){
-    
-    
-}
-
 function restart_level1() {
     bg_x = 0;
     bushes_x = 0;
@@ -408,6 +435,45 @@ function level1_complete() {
     gamestate = 1;
     p.x = 90;
     p.y = 350;
+}
+
+function restart_level2() {
+    bg_x = 0;
+    sand_x = 0;
+    fg_x = 0;
+    scrolling = false;
+    p.x = 60;
+    p.y = 402;
+}
+
+function level2_complete() {
+    bg_x = 0;
+    sand_x = 0;
+    fg_x = 0;
+    level2_completed = true;
+    gamestate = 1;
+    p.x = 90;
+    p.y = 350;
+}
+function chara_select(){
+        if(keyIsDown(37)) {
+            chara -= 1;
+        }
+        if(keyIsDown(39)){
+            chara += 1;
+        }
+
+        if(chara < 0){
+            chara = 0;
+        }
+        if(chara > 2){
+            chara = 2;
+        }
+        
+        if(keyIsDown(13)){
+            character = new Sprite(chara,1);
+            gamestate = 1;
+        }
 }
 
 //player class prototype
@@ -487,6 +553,7 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
+          jumpsfx.play();
         }
     }
     moveinlevel() {
@@ -496,13 +563,25 @@ class Player{
         this.handleDoorMovement();
 
         // DEATH AND COMPLETION
-        if (this.down > 600) {
+        if(gamestate == 2){
+           if (this.down > 600) {
             restart_level1();
             death_sound.play();
         }
         if (this.fake_x > 4200) {
             level1_complete();
             complete_sound.play();
+        } 
+        }
+        if(gamestate == 3){
+           if (this.down > 600) {
+            restart_level2();
+            death_sound.play();
+        }
+        if (this.fake_x > 4200) {
+            level2_complete();
+            complete_sound.play();
+        } 
         }
         // EXIT AT ANY TIME
         if (keyIsDown(27)) {
@@ -645,7 +724,7 @@ class Player{
     handleDoorMovement(){
         if(gamestate == 1){
         //check if a door was entered
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX < 140 && this.middleX > 60){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX < 140 && this.middleX > 60){
             console.log('entered selection door');
             gamestate = 0;
         }
@@ -655,7 +734,7 @@ class Player{
             fill(255);
             text('main menu',58,345);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX < 455 && this.middleX > 370){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX < 455 && this.middleX > 370){
             console.log('entered lvl1 door');
             gamestate = 2;
             p.x = 75;
@@ -667,7 +746,7 @@ class Player{
             fill(255);
             text('level 1',415,195);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && level1_completed && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             console.log('entered lvl2 door');
             gamestate = 3;
             p.x = 75;
@@ -679,7 +758,7 @@ class Player{
             fill(255);
             text('level 2',710,95);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 697 && this.middleX < 785 && this.middleY > 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX > 697 && this.middleX < 785 && this.middleY > 300){
             console.log('entered minigame door');
             gamestate = 4;
         }
@@ -689,7 +768,7 @@ class Player{
             fill(255);
             text('minigame',670,423);
         }
-        else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.locked){
+        else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !level1_completed && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             noStroke();
             fill(0,150);
             rect(this.middleX-50,this.up-14,100,20);
@@ -761,10 +840,10 @@ class Sprite {
         if (this.ani == 0){
             this.animation = aniR;
         }
-        else if (this.ani == 1){
+        else if (this.ani == 2){
             this.animation = aniO;
         }
-        else if (this.ani == 2){
+        else if (this.ani == 1){
             this.animation = aniF;
         }
     
