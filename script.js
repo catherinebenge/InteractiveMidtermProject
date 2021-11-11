@@ -28,6 +28,7 @@ let sand;
 let sand_x = 0;
 
 let level1_completed = false;
+let level2_completed = true;
 let enemy_image;
 let points;
 let temp;
@@ -114,7 +115,7 @@ function setup() {
     enemy12 = new Enemy(3444, 253);
     enemy13 = new Enemy(3874, 353);
     
-    gamestate=0;
+    gamestate=1;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -294,7 +295,6 @@ function levelOne(){
 }
 
 function levelTwo(){
-    //level2_hitmap, level2bg , foreground, sand 
     hitmap = level2_hitmap;
     image(hitmap, bg_x, 0);
     image(far,bg_x,0);
@@ -385,11 +385,6 @@ function setTimer(){
    time = 30; 
 }
 
-function bossLevel(){
-    
-    
-}
-
 function restart_level1() {
     bg_x = 0;
     bushes_x = 0;
@@ -401,7 +396,30 @@ function restart_level1() {
 }
 
 function level1_complete() {
+    bg_x = 0;
+    bushes_x = 0;
+    front_leaves_x = 0;
+    trees_x = 0;
     level1_completed = true;
+    gamestate = 1;
+    p.x = 90;
+    p.y = 350;
+}
+
+function restart_level2() {
+    bg_x = 0;
+    sand_x = 0;
+    fg_x = 0;
+    scrolling = false;
+    p.x = 60;
+    p.y = 402;
+}
+
+function level2_complete() {
+    bg_x = 0;
+    sand_x = 0;
+    fg_x = 0;
+    level2_completed = true;
     gamestate = 1;
     p.x = 90;
     p.y = 350;
@@ -493,13 +511,25 @@ class Player{
         this.handleDoorMovement();
 
         // DEATH AND COMPLETION
-        if (this.down > 600) {
+        if(gamestate == 2){
+           if (this.down > 600) {
             restart_level1();
             death_sound.play();
         }
         if (this.fake_x > 4200) {
             level1_complete();
             complete_sound.play();
+        } 
+        }
+        if(gamestate == 3){
+           if (this.down > 600) {
+            restart_level2();
+            death_sound.play();
+        }
+        if (this.fake_x > 4200) {
+            level2_complete();
+            complete_sound.play();
+        } 
         }
         // EXIT AT ANY TIME
         if (keyIsDown(27)) {
@@ -642,7 +672,7 @@ class Player{
     handleDoorMovement(){
         if(gamestate == 1){
         //check if a door was entered
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX < 140 && this.middleX > 60){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX < 140 && this.middleX > 60){
             console.log('entered selection door');
             gamestate = 0;
         }
@@ -652,7 +682,7 @@ class Player{
             fill(255);
             text('main menu',58,345);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX < 455 && this.middleX > 370){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX < 455 && this.middleX > 370){
             console.log('entered lvl1 door');
             gamestate = 2;
             p.x = 75;
@@ -664,7 +694,7 @@ class Player{
             fill(255);
             text('level 1',415,195);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && level1_completed && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             console.log('entered lvl2 door');
             gamestate = 3;
             p.x = 75;
@@ -676,7 +706,7 @@ class Player{
             fill(255);
             text('level 2',710,95);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 697 && this.middleX < 785 && this.middleY > 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX > 697 && this.middleX < 785 && this.middleY > 300){
             console.log('entered minigame door');
             gamestate = 4;
         }
@@ -686,7 +716,7 @@ class Player{
             fill(255);
             text('minigame',670,423);
         }
-        else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.locked){
+        else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !level1_completed && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             noStroke();
             fill(0,150);
             rect(this.middleX-50,this.up-14,100,20);
