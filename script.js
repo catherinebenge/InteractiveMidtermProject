@@ -101,7 +101,7 @@ function setup() {
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
     
-    gamestate=4;
+    gamestate=0;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -555,6 +555,7 @@ class Player{
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)){
             this.ySpeed = -10;
+        }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
@@ -757,7 +758,7 @@ class Sprite {
             
             this.index = this.index + this.speed;
             //console.log(action);
-            if(gamestate == 0){
+        if(gamestate == 0){
             console.log(action);
             if(gamestate == 0 || gamestate == 2){
                 if(this.animation == aniR){
@@ -817,17 +818,18 @@ class Sprite {
                 action = "idleR";
             }
 
-            /*
-            if (action == "jump"){
-                if(this.animation == aniR){
-                    
-                }
-            }
-            */
+        
+//            if (action == "jump"){
+//                if(this.animation == aniR){
+//                    
+//                }
+//            }
+//            //
             
             
         }   
     }
+}
 }
 
 class Enemy{
