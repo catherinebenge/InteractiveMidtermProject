@@ -1,14 +1,23 @@
+//THE ADVENTURES OF ONION
+//Midterm Project 
+
+//image variables
 let hub_hm,mg_hm,hub_bg,mg_bg,coin,lock;
+
+//gamestate controls switch statement
 let gamestate;
 let p;
+
+//timer and minigame mechanics
 let time;
 let begin;
 let playing = false;
 let firstgame = true;
 let coins = [];
 let mgpoints;
+let noiseLocation = 0;
 
-
+//level one
 let bg_x = 0;
 let bushes;
 let bushes_x = 0;
@@ -20,6 +29,7 @@ let scrolling = false;
 let test_hitmap;
 let level1_hitmap;
 
+//level 2
 let level2_hitmap;
 let level2bg;
 let foreground;
@@ -27,14 +37,15 @@ let fg_x = 0;
 let sand;
 let sand_x = 0;
 
+//globals 
 let level1_completed = false;
 let level2_completed = true;
 let enemy_image;
 let points;
 let temp;
-let noiseLocation = 0;
 let at01;
 
+//sprite images and animation arrays
 let playersprites, redimg, onionimg, fairyimg;
 let spritedata;
 let character;
@@ -48,6 +59,7 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
+//sounds
 let jumpsfx;
 let death_sound;
 let complete_sound;
@@ -58,15 +70,18 @@ let startbgm, hubbgm, level1bgm, level2bgm;
 function preload() {
     death_sound = loadSound('images/death.mp3');
     complete_sound = loadSound('images/complete.mp3');
-//bgs and hitmaps
+    
+    //bgs and hitmaps
     hub_hm = loadImage('images/hitmaps/hubhitmapwdoors.png');
     mg_hm = loadImage('images/hitmaps/mghitmap.png');
     hub_bg = loadImage('images/bgs/bghubwdoors.png');
     mg_bg = loadImage('images/bgs/bgmg.png');
-//misc assets
+    
+    //misc assets
     coin = loadImage('images/misc/coin.png');
     lock = loadImage('images/misc/lock.png');
-
+    
+    //sprites
     spritedata = loadJSON('spriteframes.json');
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
     redimg = loadImage('images/spritesheets/red.png');
@@ -78,30 +93,31 @@ function preload() {
     //sound
     jumpsfx = loadSound('sounds/jump.mp3');
 
-//level one
-    //load assets
-  test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
-  level1_hitmap = loadImage('images/level1hitmap.png');
-  level1bg = loadImage('images/parallax_forest2/j1.png');
-  bushes = loadImage('images/parallax_forest1/bushes.png');
-  trees = loadImage('images/parallax_forest1/trees.png');
-  front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
+    //level one
+    test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
+    level1_hitmap = loadImage('images/level1hitmap.png');
+    level1bg = loadImage('images/parallax_forest2/j1.png');
+    bushes = loadImage('images/parallax_forest1/bushes.png');
+    trees = loadImage('images/parallax_forest1/trees.png');
+    front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
     enemy_image = loadImage('images/enemy.gif');
-//level two
-  level2_hitmap = loadImage('images/level2hitmap.png');
-  far = loadImage('images/bgs/far.png');
-  level2bg = loadImage('images/bgs/level2bg.png');
-  foreground = loadImage('images/parallax_water/foregound-merged.png');
-  sand = loadImage('images/parallax_water/sand.png');
+    
+    //level two
+    level2_hitmap = loadImage('images/level2hitmap.png');
+    far = loadImage('images/bgs/far.png');
+    level2bg = loadImage('images/bgs/level2bg.png');
+    foreground = loadImage('images/parallax_water/foregound-merged.png');
+    sand = loadImage('images/parallax_water/sand.png');
 }
 
 function setup() {
-    //createCanvas(800,600);
+    //canvas and image resizing
     let canvas = createCanvas(800, 600);
     canvas.position(0, 0);
     level1_hitmap.resize(4268, 600);
     level1bg.resize(4268, 600);
     
+    //fonts
     textFont(at01);
     textSize(20);
 
@@ -110,7 +126,6 @@ function setup() {
     enemy2 = new Enemy(1640, 370);
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
-
     enemy5 = new Enemy(725, 325);
     enemy6 = new Enemy(1000, 470);
     enemy7 = new Enemy(1275, 470);
@@ -121,19 +136,26 @@ function setup() {
     enemy12 = new Enemy(3444, 253);
     enemy13 = new Enemy(3874, 353);
     
+    //game state
     gamestate=0;
     points = 0;
+    
+    //user sprite
     p = new Player(60,402);
+    
+    //set timer to one second
     setInterval(timer, 1000);
     
+    //load in coins for minigame
     for( let i = 0; i < 6; i++){
             temp = new mgCoin();
             coins.push(temp);
             coins[i].setPos();
     }
+    //noise for coins
     noiseDetail(24);
 
-    //different player characters
+    //different player characters array setup
     let redFrames= spritedata.redFrames;
     for (let i = 0; i < redFrames.length; i++){
       let pos = redFrames[i].position;
@@ -166,8 +188,6 @@ function setup() {
 }
 
 function draw() { 
-    //console.log(action);
-//console.log(p.fake_x, p.y);
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
       case 0:
@@ -194,14 +214,6 @@ function draw() {
   }
 }
 
-function keyPressed(){
-    //console.log(keyCode)   
-
-    
-}
-function mousePressed(){
-    console.log(mouseX,mouseY);
-}
 
 //debug screen
 function debug(){
@@ -218,14 +230,14 @@ function startScreen(){
     fill(255,160,122);
     rect(0,500,800,100);
     fill(0);
-
+    
     textAlign(CENTER);
     textSize(100);
     text('THE ADVENTURES\nOF ONION',width/2,150);
     textSize(30);
     text('Use the arrow keys to choose a character\nPress ENTER when ready!',width/2,540);
 
-    
+    //character selection
     chara_select();
     if(chara == 0){
         image(redimg,350,450);
@@ -241,6 +253,7 @@ function startScreen(){
 }
 
 function hubScreen(){
+    //hitmap and player mechanics for hub screen
     textSize(20);
     hitmap = hub_hm;
     image(hitmap,0,0);
@@ -288,9 +301,11 @@ function levelOne(){
 }
 
 function levelTwo(){
+    //same mechanics - level 2
     hitmap = level2_hitmap;
     image(hitmap, bg_x, 0);
     image(far,bg_x,0);
+    //looping over parallax images to tile them
     for (let i=0; i < 13; i++) {
         image(sand, sand_x + (i * 256), 210);
     }
@@ -319,6 +334,8 @@ function miniGame(){
     image(hitmap,0,0);
     fill(0);
     rect(0,0,width,height);
+    
+    //if clicked, begin game
     if(mouseIsPressed && !playing){
         playing = true;
         mgpoints=0;
@@ -347,6 +364,8 @@ function miniGame(){
         }
         p.display();
         p.move();
+        
+        //display the coins
         for(let i = 0; i < coins.length; i++){
             coins[i].display();
        }
@@ -368,16 +387,18 @@ function miniGame(){
     }
     
 }
-
+//timer functions 
 function timer() {
   if (time > 0) {
     time--;
   }
 }
+//reset timer
 function setTimer(){
    time = 30; 
 }
 
+//reset levels - return characters to positions and reset background offset variable
 function restart_level1() {
     bg_x = 0;
     bushes_x = 0;
@@ -417,6 +438,8 @@ function level2_complete() {
     p.x = 90;
     p.y = 350;
 }
+
+//character selection function
 function chara_select(){
         if(keyIsDown(37)) {
             chara -= 1;
@@ -438,7 +461,7 @@ function chara_select(){
         }
 }
 
-//player class prototype
+//player class 
 class Player{
     constructor(x,y){
         this.x = x;
@@ -451,21 +474,24 @@ class Player{
         this.locked = false;
         this.fake_x = x;
     }
+    //show the player sprite
     display(){
         fill(0,255,0);
         imageMode(CENTER);
+        //prototype character - for debugging
         // rect(this.x, this.y, this.size, this.size);
         character.display(this.x,this.y);
         character.animate();
         imageMode(CORNER);
-        // draw sensors
+        // draw sensors - for debugging
          //fill(0,0,255);
          //ellipse(this.left, this.middleY, 5, 5);
          //ellipse(this.right, this.middleY, 5, 5);
-        //fill(255,0,0);
+         //fill(255,0,0);
          //ellipse(this.middleX, this.up, 5, 5);
          //ellipse(this.middleX, this.down, 5, 5);
     }
+    //compute sensors of sprite
     findPlayerBounds(){
         this.left = this.x - 25;
         this.right = this.x + this.size + 3;
@@ -474,6 +500,7 @@ class Player{
         this.middleX = this.x;
         this.middleY = this.y;
     }
+    //compute sensors in level
     findPlayerBounds_level(){
         this.fake_x = this.x + (bg_x * -1);
         this.left = this.fake_x - 30;
@@ -483,6 +510,7 @@ class Player{
         this.middleX = (this.fake_x + this.size/2) - 25;
         this.middleY = this.y + this.size/2;
     }
+    //did the user die?
     death_detection(x, y) {
         let temp = blue(hitmap.get(x,y));
             if (temp == 0) {
@@ -491,6 +519,7 @@ class Player{
             }
             return false;
     }
+    //move the character
     move(){
         //compute our current sensor position
         this.findPlayerBounds();
@@ -512,6 +541,7 @@ class Player{
                 action = "walkR";
             }
         }
+        //jump the character
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
@@ -519,7 +549,7 @@ class Player{
         }
     }
     moveinlevel() {
-
+        //run functions for movement
         this.findPlayerBounds_level();
         this.handleFallJumpMovement();
         this.handleDoorMovement();
@@ -563,7 +593,8 @@ class Player{
                 this.x += 3;
                 action = "walkR";
             }
-        } // background movement to make the player look like theyre going left
+        }
+        // background movement to make the player look like theyre going left
         if ((gamestate == 2 || gamestate == 3) && this.x <= 400 && bg_x < 0 && (keyIsDown(65) || keyIsDown(37))) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x = 400;
@@ -622,6 +653,7 @@ class Player{
                 action = "walkR";
             }
         }
+        //jumping mechanics
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)){
             this.ySpeed = -10;
         }
@@ -685,18 +717,21 @@ class Player{
         } 
   }
     handleDoorMovement(){
+        //door mechanics for hub
         if(gamestate == 1){
         //check if a door was entered
         if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX < 140 && this.middleX > 60){
             console.log('entered selection door');
             gamestate = 0;
         }
+        //is this door being mouse over?
         if(mouseX > 60 && mouseX < 114 && mouseY > 359 && mouseY < 443){
             fill(0,150);
             rect(48,330,80,20);
             fill(255);
             text('main menu',58,345);
         }
+        //level one door
         if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX < 455 && this.middleX > 370){
             console.log('entered lvl1 door');
             gamestate = 2;
@@ -709,6 +744,7 @@ class Player{
             fill(255);
             text('level 1',415,195);
         }
+        //level 2 door
         if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && level1_completed && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             console.log('entered lvl2 door');
             gamestate = 3;
@@ -721,6 +757,7 @@ class Player{
             fill(255);
             text('level 2',710,95);
         }
+        //minigame door
         if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.middleX > 670 && this.middleX < 785 && this.middleY > 300){
             console.log('entered minigame door');
             gamestate = 4;
@@ -731,6 +768,7 @@ class Player{
             fill(255);
             text('minigame',670,423);
         }
+        // if level two door is locked
         else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !level1_completed && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             noStroke();
             fill(0,150);
@@ -740,6 +778,7 @@ class Player{
         }
         }
     }
+    // is the hitmap black? stop movement
     isPixelSolid(x,y){
             let temp = red(hitmap.get(x,y));
             if (temp == 0) {
@@ -747,6 +786,7 @@ class Player{
             }
             return false;
     }
+    //if 100 - purple - then its a door
     isDoor(x,y){
         let temp = red(hitmap.get(x,y));
         if (temp == 100) {
@@ -756,6 +796,7 @@ class Player{
     }
 }
 
+//coin class for minigame
 class mgCoin{
     constructor(){
         this.x;
@@ -767,6 +808,7 @@ class mgCoin{
         this.graphic = coin;
         this.noiseOffsetY = random(500,3000);
     }
+    //setting a new position each time player "grabs" a coin
     setPos(){
         this.rx = random(this.xpos);
         this.ry = random(this.ypos);
@@ -776,15 +818,19 @@ class mgCoin{
             mgpoints +=1;
         } 
     }
+    //display coin - if theres a collision
     display(){
         coin.resize(30,30);
         this.collidedWithPlayer();
         image(this.graphic,this.x,this.y);
+        
+        //move with perlin noise
         this.y = constrain(this.y, 100, height-100);
         let yMovement = map(noise(this.noiseOffsetY), 0, 1, -4, 4);
         this.y += yMovement; 
         this.noiseOffsetY += 0.02;
     }
+    //if the player collides with the coin
     collidedWithPlayer(){
         if (dist(this.x+15, this.y+15, p.x+15, p.y+15) < 30) { 
             this.setPos();
@@ -798,8 +844,7 @@ class Sprite {
         this.ani = ani;
         this.speed = speed;
         this.index = 0;
-
-        
+        //animation states
         if (this.ani == 0){
             this.animation = aniR;
         }
@@ -809,10 +854,9 @@ class Sprite {
         else if (this.ani == 1){
             this.animation = aniF;
         }
-    
         this.len = this.animation.length;
     }
-
+//show sprite
     display(x,y){
         this.x = x;
         this.y = y;
@@ -820,14 +864,13 @@ class Sprite {
         //frameRate(4);
         let index = floor(this.index) % this.len;
         image(this.animation[index],this.x,this.y);
-
     }
-
+//animate sprite every 10 frames
     animate(){
         if(frameCount%10==0){
-            
             this.index = this.index + this.speed;
             //console.log(action);
+        //
         if(gamestate == 0){
             if(gamestate == 0){
                 if(this.animation == aniR){
@@ -848,7 +891,7 @@ class Sprite {
             }
 
             
-            
+            //control actions for sprite - images
             if(action=="idleL"){
                 if(this.animation == aniR){
                     if(this.index != 13){
@@ -886,21 +929,13 @@ class Sprite {
 
                 action = "idleR";
             }
-
-        
-//            if (action == "jump"){
-//                if(this.animation == aniR){
-//                    
-//                }
-//            }
-//           
-            
             
         }   
     }
 }
 }
 
+//enemy class
 class Enemy{
     constructor(x,y){
         this.x = x;
@@ -909,9 +944,11 @@ class Enemy{
         this.actual_x;
    }
     update_pos() {
+        //adjust to offset of parallax
         this.actual_x = this.x - (bg_x * -1);
     }
     display(){
+        //display enemy and run class mechanics
         this.update_pos();
         this.enemy_detection();
         if (gamestate == 2 || gamestate == 3) {
@@ -921,6 +958,7 @@ class Enemy{
            imageMode(CORNER);
        }
     }
+    //did the enemy and the player collide? 
     enemy_detection() {
         if (dist(p.fake_x, p.middleY, this.x, this.y) < 45) {
             restart_level1();
