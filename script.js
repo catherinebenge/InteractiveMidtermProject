@@ -19,6 +19,7 @@ let scrolling = false;
 let test_hitmap;
 let level1_hitmap;
 
+
 let points;
 let temp;
 let noiseLocation = 0;
@@ -31,59 +32,46 @@ let enemydata;
 let enemies = [];
 
 let chara = 0;
-let action = "idle";
+let action = "idleR";
 let aniR = [];
 let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
+
+
 function preload() {
 
-//hub and minigame hitmap
+//bgs and hitmaps
     hub_hm = loadImage('images/hitmaps/hubhitmapwdoors.png');
     mg_hm = loadImage('images/hitmaps/mghitmap.png');
     hub_bg = loadImage('images/bgs/bghubwdoors.png');
     mg_bg = loadImage('images/bgs/bgmg.png');
-    
 //misc assets
     coin = loadImage('images/misc/coin.png');
     lock = loadImage('images/misc/lock.png');
 
-//sprite data
     spritedata = loadJSON('spriteframes.json');
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
-
-//level one
+    //load assets
   test_hitmap=loadImage('images/hitmaps/level_hitmap_t.png');
   level1_hitmap = loadImage('images/level1hitmap.png');
   level1bg = loadImage('images/parallax_forest2/j1.png');
   bushes = loadImage('images/parallax_forest1/bushes.png');
   trees = loadImage('images/parallax_forest1/trees.png');
   front_leaves = loadImage('images/parallax_forest1/frontleaves.png');
-
-//level two
 }
 
 function setup() {
     createCanvas(800,600);
-    level1_hitmap.resize(4268, 600);
-    level1bg.resize(4268, 600);
     
-    // resizing everything
-    level1_hitmap.resize(4268, 600);
-    level1bg.resize(4268, 600);
-    frameRate(60);
-
     textFont(at01);
     textSize(20);
     //set gamestate
-
-    // enemies
-    enemy1 = new Enemy(200,402);
     
-    gamestate=3;
+    gamestate=2;
     points = 0;
     p = new Player(60,402);
     setInterval(timer, 1000);
@@ -94,6 +82,7 @@ function setup() {
             coins[i].setPos();
     }
     noiseDetail(24);
+
     //different player characters
     let redFrames= spritedata.redFrames;
     for (let i = 0; i < redFrames.length; i++){
@@ -123,9 +112,10 @@ function setup() {
         aniAtk.push(img);
     }
     character = new Sprite(chara,1);
-//    for(let i = 0; i < 4; i++){
-//        //enemies[i] = new Enemy(-100,0);
-//    }
+
+    for(let i = 0; i < 4; i++){
+        enemies[i] = new Enemy(-100,0);
+    }
     
 }
 
@@ -159,14 +149,16 @@ function draw() {
 
 function keyPressed(){
     //console.log(keyCode);
-    /*
+    
     //character selection using arrow keys
         // 0 = Red, 1 = Onion, 2 = Fairy
             if(keyCode == LEFT_ARROW) {
                 chara -= 1;
+                //action = "walkL";
             }
             else if(keyCode == RIGHT_ARROW){
                 chara += 1;
+                //action = "walkR";
             }
 
             if(chara < 0){
@@ -180,7 +172,7 @@ function keyPressed(){
                 gamestate = 1;
             }
 
-    */
+    
 }
 function mousePressed(){
     //console.log(mouseX,mouseY);
@@ -229,15 +221,16 @@ function hubScreen(){
     text("press up arrow to enter a door",500,20);
     p.display();
     p.move();
+    character.animate();
 }
 
 function levelOne(){
     // moving hitmap for first lvl
-    //frameRate(60);
+    level1_hitmap.resize(4268, 600);
     hitmap = level1_hitmap;
     image(hitmap, bg_x, 0);
     background(100);
-     //trees
+    // trees
     for (let i=0; i < 4; i++) {
         tree_random = [50, 100, 0, -50];
         image(trees, trees_x + (i * 512 - tree_random[i]), 200);
@@ -253,11 +246,11 @@ function levelOne(){
     for (let i=0; i < 7; i++) {
         image(bushes, bushes_x + (i * 512), 200);
     }
+    level1bg.resize(4268, 600);
     image(level1bg, bg_x, 0);
     p.display();
     p.moveinlevel();
-    playing = true;
-    enemy1.display();
+    character.animate();
 }
 
 function levelTwo(){
@@ -336,22 +329,12 @@ function bossLevel(){
     
 }
 
-function restart_level1() {
-    bg_x = 0;
-    bushes_x = 0;
-    front_leaves_x = 0;
-    trees_x = 0;
-    scrolling = false;
-    p.x = 60;
-    p.y = 402;
-}
-
 //player class prototype
 class Player{
     constructor(x,y){
         this.x = x;
         this.y = y;
-        this.size = 30;
+        this.size = 25;
         this.ySpeed = 0;
         this.gravity = 0.3;
         this.findPlayerBounds();
@@ -360,25 +343,22 @@ class Player{
         this.fake_x = x;
     }
     display(){
-        imageMode(CENTER);
         fill(0,255,0);
         // rect(this.x, this.y, this.size, this.size);
         character.display(this.x,this.y);
-        imageMode(CORNER);
         // draw sensors
-//        fill(0,0,255);
-//        ellipse(this.left, this.middleY, 5, 5);
-//        ellipse(this.right, this.middleY, 5, 5);
-//        fill(255,0,0)
-//        ellipse(this.middleX, this.up, 5, 5);
-//        ellipse(this.middleX, this.down, 5, 5);
+        fill(0,0,255);
+        ellipse(this.left, this.middleY, 5, 5);
+        ellipse(this.right, this.middleY, 5, 5);
+        ellipse(this.middleX, this.up, 5, 5);
+        ellipse(this.middleX, this.down, 5, 5);
     }
     findPlayerBounds(){
-        this.left = this.x - 20;
+        this.left = this.x - 3;
         this.right = this.x + this.size + 3;
-        this.up = this.y - 13;
-        this.down = this.y + this.size + 1;
-        this.middleX = this.x + this.size/2 - 10;
+        this.up = this.y - 3;
+        this.down = this.y + this.size + 3;
+        this.middleX = this.x + this.size/2;
         this.middleY = this.y + this.size/2;
     }
     findPlayerBounds_level(){
@@ -389,6 +369,14 @@ class Player{
         this.down = this.y + this.size + 3;
         this.middleX = this.fake_x + this.size/2;
         this.middleY = this.y + this.size/2;
+    }
+    death_detection(x, y) {
+        let temp = blue(hitmap.get(x,y));
+            if (temp == 0) {
+            //console.log(temp);
+            return true;
+            }
+            return false;
     }
     move(){
         //compute our current sensor position
@@ -402,18 +390,18 @@ class Player{
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x -= 3;
               }
+            action = "walkL";
         }
         if(keyIsDown(68) || keyIsDown(39)){
            // only all movement if the next pixel is not solid
             if (!this.isPixelSolid(this.right, this.middleY)) {
                 this.x += 3;
             }
+            action = "walkR";
         }
-        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down) && gamestate == 4) {
-            this.ySpeed = -35;
-        }   
-        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down) && gamestate != 4) {
-            this.ySpeed = -10;
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
+          this.ySpeed = -10;
+          action = "jump";
         }
     }
     moveinlevel() {
@@ -421,9 +409,6 @@ class Player{
         this.findPlayerBounds_level();
         this.handleFallJumpMovement();
         this.handleDoorMovement();
-        if (this.down > 600) {
-            restart_level1();
-        }
         
         // movement right before reaching half the screen
         if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
@@ -479,6 +464,9 @@ class Player{
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
         }
+        // if (this.death_detection(this.fake_x, this.middleY)) {
+        //     gamestate = ;
+        // }
 
     }
     handleFallJumpMovement() {
@@ -679,8 +667,10 @@ class Sprite {
     }
 
     animate(){
-        if(frameCount%15==0){
+        if(frameCount%10==0){
+            
             this.index = this.index + this.speed;
+            console.log(action);
             if(gamestate == 0){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
@@ -699,16 +689,53 @@ class Sprite {
                 }
             }
 
-            else{
-                if(action=="idle"){
-                    if(this.animation == aniR){
-                        if(this.index != 0){
-                            this.index = 0;
+            
+            
+            if(action=="idleL"){
+                if(this.animation == aniR){
+                    if(this.index != 13){
+                        this.index = 13;
+                        }
+                }
+                
+            }
+
+            if(action == "idleR"){
+                if(this.animation == aniR){
+                    if(this.index != 0){
+                        this.index = 0;
+                    }
+                }
+            }
+
+            if (action == "walkL"){
+                
+                if(this.animation == aniR){
+                    if(this.index < 7 || this.index > 10){
+                        this.index = 7;
                         }
                     }
+
+                action = "idleL";
+            }
+
+            if (action == "walkR"){
+                if(this.animation == aniR){
+                    if(this.index < 3 || this.index > 6){
+                        this.index = 3;
+                    }
+                }
+
+                action = "idleR";
+            }
+
+            /*
+            if (action == "jump"){
+                if(this.animation == aniR){
                     
                 }
             }
+            */
             
             
         }   
@@ -716,17 +743,16 @@ class Sprite {
 }
 
 class Enemy{
-   constructor(x,y){
-       this.x = x + (bg_x * -1);
-       this.y = y;
-       this.speed = 1;
-   }
+    constructor(x,y){
+        this.x = x;
+        this.y = y;
+        this.speed = random(1,3);
+    }
 
     display(){
-        console.log(this.x);
-        if (gamestate == 2 || gamestate == 3) {
-           fill(255, 0, 0);
-           rect(this.x,this.y,50,50);
-       }
+        if(gamestate == 2){
+            rect(this.x,this.y,50,80);
+            
+        }
     }
 }
