@@ -159,6 +159,7 @@ function setup() {
 }
 
 function draw() { 
+    console.log(action);
 //console.log(p.fake_x, p.y);
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
@@ -784,7 +785,7 @@ class Sprite {
             //console.log(action);
         if(gamestate == 0){
             console.log(action);
-            if(gamestate == 0 || gamestate == 2){
+            if(gamestate == 0){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
                         this.index = 3;
