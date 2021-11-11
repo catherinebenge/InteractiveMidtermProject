@@ -47,6 +47,8 @@ let aniO = [];
 let aniF = [];
 let aniAtk = [];
 
+let startbgm, hubbgm, level1bgm, level2bgm;
+
 
 
 function preload() {
@@ -64,6 +66,9 @@ function preload() {
     playersprites = loadImage('images/spritesheets/playerspritesfinal.png');
     enemydata = loadJSON('enemyloc.json');
     at01 = loadFont('at01.ttf');
+
+    //sound
+    //startbgm = loadSound('sounds/')
 
 //level one
     //load assets
@@ -89,7 +94,6 @@ function setup() {
     
     textFont(at01);
     textSize(20);
-    //set gamestate
 
     // enemies
     enemy1 = new Enemy(720, 525);
@@ -224,7 +228,6 @@ function startScreen(){
 
     
     character.display(350,445);
-    character.animate();
     textAlign(LEFT);
 
     
@@ -244,7 +247,6 @@ function hubScreen(){
     text("press up arrow to enter a door",500,20);
     p.display();
     p.move();
-    character.animate();
 }
 
 function levelOne(){
@@ -276,7 +278,6 @@ function levelOne(){
     enemy2.display();
     enemy3.display();
     enemy4.display();
-    character.animate();
 }
 
 function levelTwo(){
@@ -402,6 +403,7 @@ class Player{
         imageMode(CENTER);
         // rect(this.x, this.y, this.size, this.size);
         character.display(this.x,this.y);
+        character.animate();
         imageMode(CORNER);
         // draw sensors
         // fill(0,0,255);
@@ -446,15 +448,15 @@ class Player{
         if(keyIsDown(65) || keyIsDown(37)){
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x -= 3;
+                action = "walkL";
               }
-            action = "walkL";
         }
         if(keyIsDown(68) || keyIsDown(39)){
            // only all movement if the next pixel is not solid
             if (!this.isPixelSolid(this.right, this.middleY)) {
                 this.x += 3;
+                action = "walkR";
             }
-            action = "walkR";
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
@@ -489,48 +491,53 @@ class Player{
         // movement right before reaching half the screen
         if ((gamestate == 2 || gamestate == 3) && bg_x <= 0 && (keyIsDown(68) || keyIsDown(39)) && scrolling == false) {
             if (!this.isPixelSolid(this.right, this.middleY)) {
-                this.x += 4;
+                this.x += 3;
+                action = "walkR";
             }
         } // background movement to make the player look like theyre going left
         if ((gamestate == 2 || gamestate == 3) && this.x <= 400 && bg_x < 0 && (keyIsDown(65) || keyIsDown(37))) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 this.x = 400;
                 scrolling = true;
-                bg_x += 4;
+                bg_x += 3;
                 bushes_x += 2;
                 front_leaves_x += 1;
                 trees_x += 1;
                 sand_x += 2; 
                 fg_x +=1;
+                action = "walkL";
             }
         } // movement left after finishing the background scroll
         if ((gamestate == 2 || gamestate == 3) && bg_x >= -3468 && (keyIsDown(65) || keyIsDown(37)) && scrolling == false) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
-                this.x -= 4;
+                this.x -= 3;
+                action = "walkL";
             }
         } // background movement to make the player look like theyre going right
         if ((gamestate == 2 || gamestate == 3) && this.x >= 400 && bg_x > -3467 && (keyIsDown(68) || keyIsDown(39))) {
             if (!this.isPixelSolid(this.right, this.middleY)) {
                 this.x = 400;
                 scrolling = true;
-                bg_x -= 4;
+                bg_x -= 3;
                 bushes_x -= 2;
                 trees_x -= 1;
                 front_leaves_x -= 1;
                 sand_x -= 2; 
                 fg_x -=1;
+                action = "walkR";
             }
         } // stop background scroll in the beginning and make the player move left
         if ((gamestate == 2 || gamestate == 3) && bg_x >= 0 && (keyIsDown(65) || keyIsDown(37)) && scrolling == true) {
             if (!this.isPixelSolid(this.left, this.middleY)) {
                 bg_x = 0;
-                this.x -= 4;
+                this.x -= 3;
                 bushes_x = 0;
                 front_leaves_x = 0;
                 trees_x = 0;
                 scrolling = false;
                 sand_x += 0; 
                 fg_x += 0;
+                action = "walkL";
             }
         } // stop background scroll at the end and make the player move right
         if ((gamestate == 2 || gamestate == 3) && bg_x <= -3468 && (keyIsDown(68) || keyIsDown(39)) && scrolling == true) {
@@ -539,14 +546,18 @@ class Player{
                 bushes_x = -2312;
                 trees_x = -1156;
                 front_leaves_x = -1156;
-                this.x += 4;
+                this.x += 3;
                 scrolling = false;
                 sand_x = -1156;
                 fg_x = -2312;
+                action = "walkR";
             }
         }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)){
             this.ySpeed = -10;
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
+          this.ySpeed = -10;
+          action = "jump";
         }
         
 
@@ -747,6 +758,8 @@ class Sprite {
             this.index = this.index + this.speed;
             //console.log(action);
             if(gamestate == 0){
+            console.log(action);
+            if(gamestate == 0 || gamestate == 2){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
                         this.index = 3;
