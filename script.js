@@ -48,11 +48,15 @@ let aniF = [];
 let aniAtk = [];
 
 let startbgm, hubbgm, level1bgm, level2bgm, jumpsfx;
+let death_sound;
+let complete_sound;
+let startbgm, hubbgm, level1bgm, level2bgm;
 
 
 
 function preload() {
-
+    death_sound = loadSound('images/death.mp3');
+    complete_sound = loadSound('images/complete.mp3');
 //bgs and hitmaps
     hub_hm = loadImage('images/hitmaps/hubhitmapwdoors.png');
     mg_hm = loadImage('images/hitmaps/mghitmap.png');
@@ -103,6 +107,16 @@ function setup() {
     enemy2 = new Enemy(1640, 370);
     enemy3 = new Enemy(2370, 415);
     enemy4 = new Enemy(3710, 80);
+
+    enemy5 = new Enemy(725, 325);
+    enemy6 = new Enemy(1000, 470);
+    enemy7 = new Enemy(1275, 470);
+    enemy8 = new Enemy(1480, 360);
+    enemy9 = new Enemy(1920, 310);
+    enemy10 = new Enemy(2610, 160);
+    enemy11 = new Enemy(2997, 473);
+    enemy12 = new Enemy(3444, 253);
+    enemy13 = new Enemy(3874, 353);
     
     gamestate=0;
     points = 0;
@@ -149,7 +163,8 @@ function setup() {
 }
 
 function draw() { 
-console.log(p.fake_x, p.y);
+    console.log(action);
+//console.log(p.fake_x, p.y);
 // switch statement with game state - each corresponds to a different "screen"
   switch(gamestate){
       case 0:
@@ -182,7 +197,7 @@ function keyPressed(){
     
 }
 function mousePressed(){
-    //console.log(mouseX,mouseY);
+    console.log(mouseX,mouseY);
 }
 
 //debug screen
@@ -223,6 +238,7 @@ function startScreen(){
 }
 
 function hubScreen(){
+    textSize(20);
     hitmap = hub_hm;
     image(hitmap,0,0);
     image(hub_bg,0,0);
@@ -283,6 +299,15 @@ function levelTwo(){
     p.display();
     p.moveinlevel();
     //playing = true;
+    enemy5.display();
+    enemy6.display();
+    enemy7.display();
+    enemy8.display();
+    enemy9.display();
+    enemy10.display();
+    enemy11.display();
+    enemy12.display();
+    enemy13.display();
 }
 
 function miniGame(){
@@ -399,7 +424,7 @@ class Player{
     constructor(x,y){
         this.x = x;
         this.y = y;
-        this.size = 25;
+        this.size = 20;
         this.ySpeed = 0;
         this.gravity = 0.3;
         this.findPlayerBounds();
@@ -415,19 +440,20 @@ class Player{
         character.animate();
         imageMode(CORNER);
         // draw sensors
-        // fill(0,0,255);
-        // ellipse(this.left, this.middleY, 5, 5);
-        // ellipse(this.right, this.middleY, 5, 5);
-        // ellipse(this.middleX, this.up, 5, 5);
-        // ellipse(this.middleX, this.down, 5, 5);
+         //fill(0,0,255);
+         //ellipse(this.left, this.middleY, 5, 5);
+         //ellipse(this.right, this.middleY, 5, 5);
+        //fill(255,0,0);
+         //ellipse(this.middleX, this.up, 5, 5);
+         //ellipse(this.middleX, this.down, 5, 5);
     }
     findPlayerBounds(){
-        this.left = this.x - 3;
+        this.left = this.x - 25;
         this.right = this.x + this.size + 3;
-        this.up = this.y - 3;
+        this.up = this.y - 20;
         this.down = this.y + this.size + 3;
-        this.middleX = this.x + this.size/2;
-        this.middleY = this.y + this.size/2;
+        this.middleX = this.x;
+        this.middleY = this.y;
     }
     findPlayerBounds_level(){
         this.fake_x = this.x + (bg_x * -1);
@@ -482,9 +508,11 @@ class Player{
         // DEATH AND COMPLETION
         if (this.down > 600) {
             restart_level1();
+            death_sound.play();
         }
         if (this.fake_x > 4200) {
             level1_complete();
+            complete_sound.play();
         }
         // EXIT AT ANY TIME
         if (keyIsDown(27)) {
@@ -558,19 +586,19 @@ class Player{
                 front_leaves_x = -1156;
                 this.x += 3;
                 scrolling = false;
-                //console.log(sand_x,fg_x);
                 sand_x = -1156;
                 fg_x = -2312;
                 action = "walkR";
             }
         }
+        if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)){
+            this.ySpeed = -10;
+        }
         if (keyIsDown(32) && this.isPixelSolid(this.middleX, this.down)) {
           this.ySpeed = -10;
           action = "jump";
         }
-        // if (this.death_detection(this.fake_x, this.middleY)) {
-        //     gamestate = ;
-        // }
+        
 
     }
     handleFallJumpMovement() {
@@ -627,57 +655,49 @@ class Player{
     handleDoorMovement(){
         if(gamestate == 1){
         //check if a door was entered
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 52 && this.middleX < 94){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX < 140 && this.middleX > 60){
             console.log('entered selection door');
             gamestate = 0;
         }
-        if(mouseX > 52 && mouseX < 94 && mouseY > 376 && mouseY < 443){
+        if(mouseX > 60 && mouseX < 114 && mouseY > 359 && mouseY < 443){
             fill(0,150);
-            rect(35,350,80,20);
+            rect(48,330,80,20);
             fill(255);
-            text('main menu',45,365);
+            text('main menu',58,345);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 401 && this.middleX < 442){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX < 455 && this.middleX > 370){
             console.log('entered lvl1 door');
             gamestate = 2;
             p.x = 75;
             p.y = 400;
         }
-        if(mouseX > 401 && mouseX < 442 && mouseY > 232 && mouseY < 297){
+        if(mouseX > 401 && mouseX < 455 && mouseY > 208 && mouseY < 295){
             fill(0,150);
-            rect(390,200,60,20);
+            rect(400,180,60,20);
             fill(255);
-            text('level 1',405,215);
+            text('level 1',415,195);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 522 && this.middleX < 563){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 717 && this.middleX < 784 && this.middleY < 300){
             console.log('entered lvl2 door');
-            //gamestate = 3;
+            gamestate = 3;
+            p.x = 75;
+            p.y = 400;
         }
-        if(mouseX > 522 && mouseX < 563 && mouseY > 334 && mouseY < 432){
+        if(mouseX > 697 && mouseX < 755 && mouseY > 108 && mouseY < 199){
             fill(0,150);
-            rect(515,310,60,20);
+            rect(698,80,60,20);
             fill(255);
-            text('level 2',527,325);
+            text('level 2',710,95);
         }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 670 && this.middleX < 712 && this.middleY > 300){
+        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 697 && this.middleX < 785 && this.middleY > 300){
             console.log('entered minigame door');
             gamestate = 4;
         }
-        if(mouseX > 670 && mouseX < 712 && mouseY > 456 && mouseY < 523){
+        if(mouseX > 670 && mouseX < 724 && mouseY > 439 && mouseY < 521){
             fill(0,150);
-            rect(660,430,70,20);
+            rect(660,410,70,20);
             fill(255);
-            text('minigame',670,443);
-        }
-        if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && !this.locked && this.middleX > 692 && this.middleX < 744 && this.middleY < 300){
-            console.log('entered boss door');
-            //gamestate = 5;
-        } 
-        if(mouseX > 692 && mouseX < 744 && mouseY > 120 && mouseY < 203){
-            fill(0,150);
-            rect(690,90,50,20);
-            fill(255);
-            text('boss',701,105);
+            text('minigame',670,423);
         }
         else if(this.isDoor(this.middleX, this.up) && (keyIsDown(38) || keyIsDown(87)) && this.locked){
             noStroke();
@@ -691,7 +711,6 @@ class Player{
     isPixelSolid(x,y){
             let temp = red(hitmap.get(x,y));
             if (temp == 0) {
-            //console.log(temp);
             return true;
             }
             return false;
@@ -776,8 +795,10 @@ class Sprite {
         if(frameCount%10==0){
             
             this.index = this.index + this.speed;
+            //console.log(action);
+        if(gamestate == 0){
             console.log(action);
-            if(gamestate == 0 || gamestate == 2){
+            if(gamestate == 0){
                 if(this.animation == aniR){
                     if(this.index > 6 || this.index < 3){
                         this.index = 3;
@@ -835,17 +856,18 @@ class Sprite {
                 action = "idleR";
             }
 
-            /*
-            if (action == "jump"){
-                if(this.animation == aniR){
-                    
-                }
-            }
-            */
+        
+//            if (action == "jump"){
+//                if(this.animation == aniR){
+//                    
+//                }
+//            }
+//           
             
             
         }   
     }
+}
 }
 
 class Enemy{
@@ -871,6 +893,7 @@ class Enemy{
     enemy_detection() {
         if (dist(p.fake_x, p.middleY, this.x, this.y) < 45) {
             restart_level1();
+            death_sound.play();
         }
     }
 }
